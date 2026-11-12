@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="Hvh0GDQkTThDm4WZPw7nse">
+<head data-page-node-id="lUruGmeYmGvDLWRfDBMtu1">
+<meta charset="utf-8" data-page-node-id="6abwHlH6yDfabOqyMOKMhX" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" data-page-node-id="XcQxaLkZm8kLPTQzfM6jMS" />
+<title>易经占卜 · 梅花易数 / 小六壬</title>
+<style>
+:root{
+  --paper:#faf8f4; --ink:#1c1a17; --ink-soft:#4a463f; --slate:#5b6b6e;
+  --cinnabar:#b23b2e; --line:#e3ddd2; --line-soft:#efeae0; --card:#ffffff;
+  --shadow:0 1px 2px rgba(28,26,23,.04),0 8px 24px rgba(28,26,23,.05);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  line-height:1.7; font-size:16px; letter-spacing:.01em;
+}
+/* ---------- layout ---------- */
+.app{display:flex; min-height:100vh}
+.sidebar{
+  width:288px; flex:0 0 288px; background:var(--card); border-right:1px solid var(--line);
+  display:flex; flex-direction:column; position:sticky; top:0; height:100vh; z-index:30;
+  transition:transform .25s ease, width .22s ease, flex-basis .22s ease;
+}
+.app.nav-collapsed .sidebar{flex:0 0 0; width:0; min-width:0; border-right:none; overflow:hidden}
+.sidebar-h{padding:18px 18px 12px; border-bottom:1px solid var(--line-soft); display:flex; align-items:center; gap:10px}
+.sidebar-h .taiji{width:30px;height:30px;animation:spin 90s linear infinite}
+.sidebar-h h2{margin:0; font-size:15px; font-weight:700}
+.side-close{display:none; margin-left:auto; border:none; background:transparent; font-size:22px; line-height:1; color:var(--slate); cursor:pointer; padding:0 4px}
+.side-close:hover{color:var(--ink)}
+.sidebar-actions{display:flex; gap:8px; padding:12px 14px; border-bottom:1px solid var(--line-soft)}
+.mini-btn{flex:1; padding:8px; border:1px solid var(--line); background:#fcfbf8; border-radius:9px; cursor:pointer; font:inherit; color:var(--ink-soft); font-size:13px}
+.mini-btn:hover{border-color:var(--slate)}
+.hist-list{flex:1; overflow-y:auto; padding:8px}
+.hist-item{padding:11px 12px; border:1px solid var(--line); border-radius:10px; margin-bottom:9px; background:#fcfbf8; cursor:pointer; transition:.15s}
+.hist-item:hover{border-color:var(--slate)}
+.hist-item.active{border-color:var(--cinnabar); background:#fff}
+.hist-q{font-size:14px; font-weight:600; color:var(--ink); display:flex; gap:6px; align-items:baseline}
+.hist-q .mode{font-size:11px; color:#fff; background:var(--slate); border-radius:5px; padding:1px 6px; flex:0 0 auto; font-weight:600}
+.hist-q .mode.xl{background:var(--cinnabar)}
+.hist-q .txt{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0}
+.hist-meta{display:flex; align-items:center; justify-content:space-between; margin-top:6px}
+.hist-time{font-size:11.5px; color:var(--slate)}
+.hist-ops{display:flex; gap:6px}
+.hist-ops button{border:none; background:transparent; cursor:pointer; font-size:12px; color:var(--slate); padding:2px 4px; border-radius:6px}
+.hist-ops button:hover{background:var(--line-soft); color:var(--ink)}
+.hist-ops .del:hover{color:var(--cinnabar)}
+.hist-empty{text-align:center; color:var(--slate); font-size:13px; padding:40px 16px; line-height:1.8}
+.side-user{padding:12px 16px; border-top:1px solid var(--line-soft); font-size:12.5px; color:var(--slate); display:flex; align-items:center; justify-content:space-between}
+.side-user b{color:var(--ink)}
+.side-mask{position:fixed; inset:0; background:rgba(28,26,23,.32); z-index:44; visibility:hidden; opacity:0; pointer-events:none; transition:opacity .25s}
+.side-mask.show{visibility:visible; opacity:1; pointer-events:auto}
+
+.main{flex:1; min-width:0; display:flex; flex-direction:column}
+.wrap{max-width:880px; width:100%; margin:0 auto; padding:0 18px 80px}
+header.top{display:flex; align-items:center; gap:14px; padding:26px 0 14px; position:relative}
+.hamburger{display:flex; border:1px solid var(--line); background:var(--card); width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:18px; line-height:1; align-items:center; justify-content:center}
+.taiji{width:42px; height:42px; flex:0 0 42px; animation:spin 90s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.title-block h1{margin:0; font-size:21px; font-weight:700; letter-spacing:.04em}
+.title-block p{margin:2px 0 0; font-size:13px; color:var(--slate)}
+.gear{margin-left:auto; border:1px solid var(--line); background:var(--card); color:var(--ink-soft);
+  width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:17px; line-height:1; display:flex; align-items:center; justify-content:center}
+.gear:hover{border-color:var(--slate)}
+.hdr-user{display:none; font-size:12.5px; color:var(--slate); max-width:96px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-left:4px}
+.hdr-user:active{color:var(--ink)}
+.tabs{display:flex; gap:6px; align-items:center; border-bottom:1px solid var(--line); margin:6px 0 16px}
+.tab{flex:1; text-align:center; padding:11px 0; cursor:pointer; color:var(--slate); font-size:15px;
+  border-bottom:2px solid transparent; margin-bottom:-1px; transition:.15s}
+.tab.active{color:var(--ink); border-bottom-color:var(--cinnabar); font-weight:600}
+.card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:var(--shadow)}
+.card + .card{margin-top:18px}
+label.fl{display:block; font-size:13px; color:var(--slate); margin:0 0 7px; font-weight:600}
+textarea,input[type=text]{
+  width:100%; border:1px solid var(--line); border-radius:10px; padding:11px 13px; font:inherit;
+  background:#fcfbf8; color:var(--ink); resize:vertical; outline:none; transition:.15s;
+}
+textarea:focus,input[type=text]:focus{border-color:var(--slate); background:#fff}
+textarea{min-height:64px}
+.hint{font-size:12.5px; color:var(--slate); margin:9px 0 0; line-height:1.6}
+.hint code{background:var(--line-soft); padding:1px 5px; border-radius:4px; font-size:12px}
+.row-method{margin-top:16px}
+.go-row{display:flex; gap:10px; margin-top:20px; align-items:stretch}
+.go-row .go{margin-top:0; flex:1}
+.new-btn{width:52px; flex:0 0 52px; border:1px solid var(--line); background:#fcfbf8; border-radius:11px; cursor:pointer;
+  font-size:22px; line-height:1; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; transition:.15s}
+.new-btn:hover{border-color:var(--cinnabar); color:var(--cinnabar)}
+.go:hover{filter:brightness(1.05)}
+.go:disabled{opacity:.55; cursor:default}
+.disclaim{font-size:12px; color:var(--slate); text-align:center; margin-top:12px}
+/* result：两个模块各自独立的结果区，仅激活模块显示 */
+.proto-warn{margin:14px 0 0; padding:11px 14px; border:1px solid var(--cinnabar); background:#fff6f4; border-radius:10px;
+  font-size:13px; color:var(--cinnabar); line-height:1.7}
+.proto-warn code{background:#fff; padding:1px 5px; border-radius:4px; font-size:12.5px}
+.result-pane{display:none; margin-top:24px}
+.result-pane.active:not(:empty){display:block}
+.result-pane .card + .card{margin-top:18px}
+/* 报告卡内的跨模块快捷入口 */
+.cross-link{margin-left:auto; border:none; background:transparent; color:var(--slate); font:inherit; font-size:12.5px;
+  cursor:pointer; padding:2px 6px; border-radius:6px; white-space:nowrap; transition:.15s}
+.cross-link:hover{color:var(--cinnabar); background:var(--line-soft)}
+/* 草稿占卜提示 */
+.draft-tip{font-size:13.5px; color:var(--ink-soft); background:#fcfbf8; border:1px dashed var(--line); border-radius:10px; padding:12px 14px; line-height:1.7}
+.hist-item.is-draft{background:#fff; border-style:dashed}
+.panel-h{font-size:14px; font-weight:700; color:var(--ink); margin:0 0 14px; display:flex; align-items:center; gap:8px}
+.panel-h .dot{width:7px; height:7px; border-radius:50%; background:var(--cinnabar)}
+.meta{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px 16px; font-size:13.5px}
+.meta div{display:flex; flex-direction:column; gap:2px}
+.meta .k{color:var(--slate); font-size:12px}
+.meta .v{font-weight:600}
+.meta .v .small{font-weight:400; color:var(--ink-soft); font-size:12.5px}
+/* yao lines */
+.gua-vis{display:flex; gap:22px; flex-wrap:wrap; margin-top:6px}
+.gua-col{flex:1; min-width:160px}
+.gua-col .gc-title{font-size:13px; color:var(--slate); text-align:center; margin-bottom:8px}
+.yao{display:flex; align-items:center; gap:10px; margin:5px 0}
+.yao .lines{flex:1; display:flex; flex-direction:column; gap:5px}
+.yline{height:8px; border-radius:1px}
+.yline.yang{background:var(--ink)}
+.yline.yin{background:transparent; border-top:1px solid var(--line); position:relative; height:8px}
+.yline.vin::before,.yline.vin::after{content:""; position:absolute; top:0; width:46%; height:8px; background:var(--ink); border-radius:1px}
+.yline.vin::before{left:0} .yline.vin::after{right:0}
+.yao.dong .yline{box-shadow:inset 0 0 0 2px var(--cinnabar)}
+.yao .ytag{width:54px; text-align:right; font-size:12.5px; color:var(--slate)}
+.yao.dong .ytag{color:var(--cinnabar); font-weight:700}
+.legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:14px; font-size:13px}
+.legend span b{color:var(--cinnabar)}
+/* xlr flow */
+.xlr{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px}
+.xnode{padding:9px 12px; border:1px solid var(--line); border-radius:10px; background:#fcfbf8; text-align:center; min-width:62px}
+.xnode.final{border-color:var(--cinnabar); background:#fff; color:var(--cinnabar); font-weight:700}
+.xnode small{display:block; color:var(--slate); font-size:11px; font-weight:400}
+.xarrow{color:var(--slate); font-size:18px}
+.basis{margin-top:14px; padding:12px 14px; background:#fcfbf8; border:1px dashed var(--line); border-radius:10px; font-size:13.5px; color:var(--ink-soft); line-height:1.7}
+.basis b{color:var(--ink)}
+/* report */
+.report-title{display:flex; align-items:center; flex-wrap:wrap; gap:10px 12px; margin:0 0 6px}
+.report-head{font-size:19px; font-weight:700; margin:0; line-height:1.5}
+.pill{display:inline-flex; align-items:center; margin:0; padding:4px 12px; border-radius:999px; font-size:13px; font-weight:600;
+  border:1px solid var(--line); background:#fcfbf8; color:var(--slate)}
+.pill.good{border-color:var(--cinnabar); color:var(--cinnabar); background:#fdf2f0}
+.pill.bad{border-color:var(--slate); color:var(--slate); background:#f5f4f1}
+.sec{margin-top:16px; padding-top:14px; border-top:1px solid var(--line-soft)}
+.sec:first-of-type{border-top:none; padding-top:0}
+.sec h4{margin:0 0 6px; font-size:14.5px; color:var(--cinnabar); font-weight:700}
+.sec p{margin:0; font-size:14.5px; color:var(--ink-soft); white-space:pre-line}
+.badge{display:inline-block; font-size:11.5px; color:var(--slate); border:1px solid var(--line);
+  border-radius:999px; padding:2px 9px; margin-left:8px; vertical-align:middle}
+.badge.llm{color:var(--cinnabar); border-color:var(--cinnabar)}
+.err{margin-top:14px; padding:12px 14px; border:1px solid var(--cinnabar); background:#fff6f4; border-radius:10px; font-size:13px; color:var(--cinnabar)}
+.err code{background:#fff; padding:1px 5px; border-radius:4px}
+.share-row{display:flex; justify-content:flex-end; margin-top:14px}
+.share-btn{border:1px solid var(--cinnabar); color:var(--cinnabar); background:#fff; border-radius:9px; padding:9px 16px; cursor:pointer; font:inherit; font-size:13.5px; font-weight:600}
+.share-btn:hover{background:var(--cinnabar); color:#fff}
+/* settings drawer */
+.mask{position:fixed; inset:0; background:rgba(28,26,23,.32); display:none; z-index:40}
+.mask.show{display:block}
+.drawer{position:fixed; top:0; right:0; height:100%; width:380px; max-width:90vw; background:var(--paper);
+  box-shadow:-10px 0 40px rgba(28,26,23,.18); transform:translateX(100%); transition:transform .25s ease; z-index:50; overflow-y:auto}
+.drawer.show{transform:translateX(0)}
+.drawer-inner{padding:22px 20px 40px}
+.drawer h3{margin:0 0 4px; font-size:17px}
+.drawer .sub{font-size:12.5px; color:var(--slate); margin:0 0 18px}
+.field{margin-bottom:14px}
+.field label{display:block; font-size:13px; color:var(--slate); margin-bottom:6px; font-weight:600}
+select{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff; font:inherit; color:var(--ink)}
+.toggle-row{display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-top:1px solid var(--line-soft); margin-top:6px}
+.switch{position:relative; width:46px; height:26px; flex:0 0 46px}
+.switch input{opacity:0; width:0; height:0}
+.slider{position:absolute; inset:0; background:var(--line); border-radius:999px; cursor:pointer; transition:.2s}
+.slider:before{content:""; position:absolute; width:20px; height:20px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.switch input:checked + .slider{background:var(--cinnabar)}
+.switch input:checked + .slider:before{transform:translateX(20px)}
+.btn-line{width:100%; padding:11px; border:1px solid var(--line); border-radius:10px; background:#fff; cursor:pointer; font:inherit; color:var(--ink-soft); margin-top:6px}
+.btn-line:hover{border-color:var(--slate)}
+.btn-primary{background:var(--ink); color:#fff; border-color:var(--ink)}
+.note{font-size:12px; color:var(--slate); margin-top:10px; line-height:1.6}
+.footer{margin-top:30px; font-size:12px; color:var(--slate); text-align:center; line-height:1.7}
+/* 主页面大模型解读开关 */
+.llm-bar{display:flex; align-items:center; gap:14px; margin-top:22px; padding:12px 16px;
+  background:var(--card); border:1px solid var(--line); border-radius:12px}
+.llm-info{display:flex; flex-direction:column; gap:2px; flex:1; min-width:0}
+.llm-label{font-size:14px; font-weight:600; color:var(--ink)}
+.llm-desc{font-size:12.5px; color:var(--slate); line-height:1.5}
+.llm-bar .switch{margin:0; flex:0 0 auto}
+.modal .sub b{color:var(--ink); font-weight:600}
+/* auth modal */
+.modal-mask{position:fixed; inset:0; background:rgba(28,26,23,.4); display:none; z-index:60; align-items:center; justify-content:center; padding:18px}
+.modal-mask.show{display:flex}
+.modal{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:26px 24px; width:100%; max-width:360px; box-shadow:var(--shadow)}
+.modal h3{margin:0 0 4px; font-size:19px; text-align:center}
+.modal .sub{margin:0 0 18px; font-size:13px; color:var(--slate); text-align:center}
+.modal .field{margin-bottom:12px}
+.modal input[type=text]{background:#fff}
+.modal .err-msg{color:var(--cinnabar); font-size:13px; min-height:18px; margin:4px 0 10px; text-align:center}
+.remember-row{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); margin:2px 0 12px; cursor:pointer; user-select:none}
+.remember-row input{width:16px; height:16px; accent-color:var(--cinnabar); cursor:pointer}
+.modal .switch-mode{text-align:center; font-size:13px; color:var(--slate); margin-top:12px}
+.modal .switch-mode a{color:var(--cinnabar); cursor:pointer; text-decoration:underline}
+.toast{position:fixed; left:50%; bottom:30px; transform:translateX(-50%); background:var(--ink); color:#fff; padding:10px 18px; border-radius:10px; font-size:13.5px; z-index:90; opacity:0; transition:.25s; pointer-events:none}
+.toast.show{opacity:1}
+
+/* share preview modal */
+.share-mask{position:fixed; inset:0; background:rgba(28,26,23,.5); display:none; z-index:70; align-items:center; justify-content:center; padding:18px}
+.share-mask.show{display:flex}
+.share-modal{width:520px; max-width:94vw; background:var(--paper); border:1px solid var(--line); border-radius:16px; box-shadow:0 20px 60px rgba(28,26,23,.28); display:flex; flex-direction:column; max-height:90vh; overflow:hidden}
+.share-modal-h{display:flex; align-items:center; gap:8px; padding:14px 18px; border-bottom:1px solid var(--line-soft); font-size:15px; font-weight:700; color:var(--ink)}
+.share-modal-h .dot{width:7px; height:7px; border-radius:50%; background:var(--cinnabar)}
+.share-close{margin-left:auto; border:none; background:transparent; font-size:22px; line-height:1; cursor:pointer; color:var(--slate); padding:0 4px}
+.share-close:hover{color:var(--ink)}
+.share-canvas-wrap{overflow:auto; padding:16px; display:flex; justify-content:center; background:repeating-conic-gradient(#efeae0 0% 25%, #faf8f4 0% 50%) 50%/22px 22px}
+.share-canvas-wrap img{max-width:100%; height:auto; border-radius:10px; box-shadow:0 6px 20px rgba(28,26,23,.12); background:#fff}
+.share-modal-foot{display:flex; gap:10px; padding:14px 18px; border-top:1px solid var(--line-soft)}
+.share-modal-foot .btn-line{margin-top:0}
+
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible, .share-close:focus-visible{outline:2px solid var(--cinnabar); outline-offset:2px}
+
+@media (max-width:920px){
+  /* 移动端：历史记录栏作为左侧可滑出抽屉（可展开/收起），不再占据主页面顶部 */
+  .sidebar{
+    position:fixed; top:0; left:0; height:100vh; height:100dvh;
+    width:84%; max-width:330px; flex:0 0 auto; transform:translateX(-100%);
+    transition:transform .25s ease; z-index:45; background:var(--card);
+    border-right:1px solid var(--line); box-shadow:8px 0 40px rgba(28,26,23,.18);
+  }
+  .app.nav-collapsed .sidebar{width:84%; max-width:330px; flex:0 0 auto; transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .hist-list{flex:1; max-height:none; overflow-y:auto}
+  .side-user{flex:0 0 auto; padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+  .hamburger{display:flex}
+  .hdr-user{display:block}
+  .side-close{display:flex; align-items:center; justify-content:center}
+}
+@media (max-width:560px){
+  .gua-vis{gap:14px} .gua-col{min-width:130px}
+  .title-block h1{font-size:18px} .card{padding:16px}
+  .title-block p{display:none}
+  .meta{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .wrap{padding:0 14px 70px}
+  .result-pane{margin-top:18px}
+  .switch-btn{padding:6px 9px; font-size:12px}
+  .new-btn{width:48px; flex:0 0 48px}
+}
+@media (prefers-reduced-motion:reduce){ .taiji{animation:none} }
+
+
+.side-cloud{padding:10px 14px 12px; border-top:1px solid var(--line-soft)}
+.sync-status{font-size:11.5px; color:var(--slate); text-align:center; margin-bottom:8px}
+.cloud-ops{display:flex; gap:8px; margin-bottom:6px}
+.cloud-ops .mini-btn{font-size:12px; padding:7px 4px}
+.mini-btn.warn{color:var(--cinnabar); border-color:var(--cinnabar)}
+</style>
+</head>
+<body data-page-node-id="mOVqVDIYOASkVGHrO1BMmC">
+<div class="app" id="app" data-page-node-id="PE52z2CBNdr5kmOVir8Yef">
+  <!-- 侧栏：历史记录 -->
+  <aside class="sidebar" id="sidebar" data-page-node-id="baK6koEhRGFRlhCkBRR2kN">
+    <div class="sidebar-h" data-page-node-id="C33wHW0bYAtaA4YX7INH20">
+      <svg class="taiji" viewBox="0 0 100 100" aria-hidden="true" data-page-node-id="JOr9vOkGNuHxD3YdlrBp8D">
+        <circle cx="50" cy="50" r="48" fill="none" stroke="#1c1a17" stroke-width="2" data-page-node-id="aVPN3z7TKcIrFHaNEkYTGv"/>
+        <path d="M50 2 A24 24 0 0 1 50 50 A24 24 0 0 0 50 98 A48 48 0 0 1 50 2 Z" fill="#1c1a17" data-page-node-id="qUaIrKe7W3s0VUXxSbYDZn"/>
+        <circle cx="50" cy="26" r="7" fill="#faf8f4" data-page-node-id="3VKCLk6BSAFKXoeDSe6oIf"/>
+        <circle cx="50" cy="74" r="7" fill="#1c1a17" data-page-node-id="d6Fnd8s55XycRBFx4vtV3k"/>
+      </svg>
+      <h2 data-page-node-id="dDgonpYBHBj95Lt0JjI5hC">历史记录</h2>
+      <button class="side-close" id="sideClose" title="收起历史记录" aria-label="收起历史记录" data-page-node-id="sideClose">×</button>
+    </div>
+    <div class="sidebar-actions" data-page-node-id="inVE0j1KqpkcH7f77qK95K">
+      <button class="mini-btn" id="refreshBtn" data-page-node-id="wTHvqb64sqdETIvptKfqEs">刷新</button>
+      <button class="mini-btn" id="clearAllBtn" data-page-node-id="w9IUx2iKdilDudeImfBz8t">清空</button>
+    </div>
+    
+      <div class="side-cloud">
+        <div class="sync-status" id="syncStatus">待同步</div>
+        <div class="cloud-ops">
+          <button class="mini-btn" id="syncNowBtn" type="button">立即同步</button>
+          <button class="mini-btn" id="toggleSyncBtn" type="button">自动:开</button>
+        </div>
+        <div class="cloud-ops">
+          <button class="mini-btn" id="exportBtn" type="button">导出备份</button>
+          <button class="mini-btn" id="importBtn" type="button">导入备份</button>
+        </div>
+        <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
+      </div>
+<div class="hist-list" id="histList" data-page-node-id="tc6SLfotRxspWN4Ei6qsiy">
+      <div class="hist-empty" data-page-node-id="GvHpUiCcKNvMsEq2xLUX6C">还没有记录。<br data-page-node-id="tI0cFyF4iDkDK4Q1RTDq2A"/>算一卦，结果会自动保存在这里。</div>
+    </div>
+    <div class="side-user" data-page-node-id="cSideUser">
+      <span>当前用户：<b id="sideUser" data-page-node-id="cY9QCK0rpGnSDPu1Dk44YB">—</b></span>
+      <a href="#" id="logoutLink" title="退出当前账号" data-page-node-id="fwt88jJ5eOFhW54oh28twu">退出</a>
+    </div>
+  </aside>
+  <div class="side-mask" id="sideMask" data-page-node-id="EjD1aWWNLaZn9vkMzUmkNi"></div>
+
+  <!-- 主区 -->
+  <main class="main" data-page-node-id="rYnIbubOyhFi9Z8jtMNugv">
+    <div class="wrap" data-page-node-id="0oX2FPi4AAsF9POMEGaAlk">
+      
+      <header class="top" data-page-node-id="tRwqGhGzNdpzMYUAdVGxt5">
+        <button class="hamburger" id="hamburger" title="历史记录" data-page-node-id="wUx8gK8CD9oJvOmfbnVjTK">☰</button>
+        <svg class="taiji" viewBox="0 0 100 100" aria-hidden="true" data-page-node-id="Iq7zcmGEvval6R9IGM4DXG">
+          <circle cx="50" cy="50" r="48" fill="none" stroke="#1c1a17" stroke-width="2" data-page-node-id="UwftfLCadkJRymg4GKfd5q"/>
+          <path d="M50 2 A24 24 0 0 1 50 50 A24 24 0 0 0 50 98 A48 48 0 0 1 50 2 Z" fill="#1c1a17" data-page-node-id="nzazRMploxbFKzoPBLeqem"/>
+          <circle cx="50" cy="26" r="7" fill="#faf8f4" data-page-node-id="eKBHiGVW20mUwflVMNcPnb"/>
+          <circle cx="50" cy="74" r="7" fill="#1c1a17" data-page-node-id="EFhqyXbckqQKb1gsVY4Trc"/>
+        </svg>
+        <div class="title-block" data-page-node-id="tZ1MIchgl00XaTamtJR8iC">
+          <h1 data-page-node-id="F1YB8pMhPYYSTb5Uzqhj3J">易经占卜</h1>
+          <p data-page-node-id="XmYA9h3PiaOnYafryqR52S">梅花易数 · 小六壬 · 在线排盘与解读</p>
+        </div>
+        <span class="hdr-user" id="hdrUser" data-page-node-id="hdrUser">—</span>
+        <button class="gear" id="gearBtn" title="设置大模型" data-page-node-id="5QnEfrn7q5JldGHcHGIBUF">⚙</button>
+      </header>
+
+      <div class="tabs" data-page-node-id="N6RRGjjbHRwOPB9jcVhUyM">
+        <div class="tab active" data-mode="meihua" data-page-node-id="wF9hLdYdY1QS4Il11srQsX">梅花易数</div>
+        <div class="tab" data-mode="xiaoliuren" data-page-node-id="hrqExXBbGCYgT3MRZSooFf">小六壬</div>
+      </div>
+
+      <div class="card" data-page-node-id="HbUvjnFfHVXizTtCML2m1J">
+        <label class="fl" data-page-node-id="Z8KRUUa6bilk0vxvrQSUIs">占问之事</label>
+        <textarea id="question" placeholder="例如：下周的面试能不能通过？/ 这笔投资近期收益如何？"></textarea>
+
+        <div class="hint" style="margin-top:4px" data-page-node-id="5tE9CZjpAEf7i4BZvbhhfG">起卦方式：<b data-page-node-id="Z1K0BqnoPkU5eoXIJ3LO4n">数字起卦</b>，结果随起卦时辰略有浮动。</div>
+
+        <div class="row-method" id="numRow" data-page-node-id="BZmAxA3YedowWxpmGI2Ir8">
+          <label class="fl" data-page-node-id="Ic1gXCqdVOTgLn78bYXYxz">起卦数字</label>
+          <input type="text" id="numbers" placeholder="例如 3 5 7（三个 1–9 数字，可重复）" data-page-node-id="g59fyQbBiu5D4U3jEvGC7j" />
+          <div class="hint" id="numHint" data-page-node-id="V4eHFBRsCX6bH6VZ9hRqSs">
+            同一组数字在不同时辰起卦，结果会略有不同。
+          </div>
+        </div>
+
+        <div class="go-row" data-page-node-id="jLjnI4oPyobTRXn8bUGHUM">
+          <button class="go" id="goBtn" data-page-node-id="llKGgHgdcHieHT5r1HEJXg">起　卦</button>
+          <button class="new-btn" id="newBtn" type="button" title="新建占卜" data-page-node-id="shy6zk357lBsAokbIUEQ2D">＋</button>
+        </div>
+        <div class="disclaim" data-page-node-id="rsNM2gbCXMGiHk121c7B41">传统占术，仅供思路参考，不构成任何决策依据。</div>
+      </div>
+
+      <!-- 两个模块的结果区彼此隔离，仅当前模块可见 -->
+      <div class="result-pane" id="resultMeihua" data-page-node-id="B3uvNFDw0t3O6C5iDDUQez"></div>
+      <div class="result-pane" id="resultXlr" data-page-node-id="509CD94uchpCu43xWYNAZV"></div>
+
+      <div class="llm-bar" data-page-node-id="yjLlmBar">
+        <div class="llm-info" data-page-node-id="yjLlmInfo">
+          <span class="llm-label" data-page-node-id="yjLlmLabel">大模型解读</span>
+          <span class="llm-desc" data-page-node-id="yjLlmDesc">开启时由大模型生成解读，关闭时使用内置模板</span>
+        </div>
+        <label class="switch" id="useLLMMainSwitch" data-page-node-id="yjLlmSwitch"><input type="checkbox" id="useLLMMain" data-page-node-id="yjLlmInput" /><span class="slider" data-page-node-id="yjLlmSlider"></span></label>
+      </div>
+
+      <div class="footer" data-page-node-id="2rw2lfAMZj59BkO1n3wttv">解读可由大模型生成，也可使用内置模板；本页无需联网、无需服务器，记录保存在本机浏览器；大模型为可选功能，启用后接口密钥同样只存在本机。</div>
+    </div>
+  </main>
+</div>
+
+<!-- 设置抽屉 -->
+<div class="mask" id="mask" data-page-node-id="erW1BA2S2qq0MAcWt7IUQe"></div>
+<div class="drawer" id="drawer" data-page-node-id="HHj4d3lqPNTOwbqYYEHICz">
+  <div class="drawer-inner" data-page-node-id="Zv7I0gHnE2b7AN3eG8R26n">
+    <h3 data-page-node-id="pyUzTnO5tl9Clw6BVsGJKZ">大模型设置</h3>
+    <p class="sub" data-page-node-id="q6br3VCwT4o1NPAbK07qCN">连接大模型后，解读报告将由其生成，更贴合你的问题。也可不填，使用内置解读。</p>
+    <div class="field" data-page-node-id="1VSLILSLPl5jxgEefMAvl8">
+      <label data-page-node-id="g2I5dELsf6nGwm8OlPP0jg">接口服务商</label>
+      <select id="preset" data-page-node-id="kU48RTkmKxEDHfERCwANcO">
+        <option value="https://api.deepseek.com/v1" data-page-node-id="GcVpCZcrE3znr7LBpK2LAW">DeepSeek</option>
+        <option value="https://api.openai.com/v1" data-page-node-id="u51w8p61ymoiCoZonnyFWI">OpenAI</option>
+        <option value="https://api.moonshot.cn/v1" data-page-node-id="jBuFG47Z6SzS15p6C4UiNc">Moonshot（Kimi）</option>
+        <option value="https://dashscope.aliyuncs.com/compatible-mode/v1" data-page-node-id="rIBhzF1pKrVB0C8VhKh0DK">通义千问（DashScope）</option>
+        <option value="custom" data-page-node-id="oYoNE4KZDkfzBRaWLoBQos">自定义</option>
+      </select>
+    </div>
+    <div class="field" id="baseField" style="display:none" data-page-node-id="x4mtmS7wPmkMrtDtm5v7F2">
+      <label data-page-node-id="MBqLGMFCMJhpUqg2MZJ3ov">自定义接口地址（含 /v1）</label>
+      <input type="text" id="baseCustom" placeholder="https://your-endpoint/v1" data-page-node-id="LUKBT4pOSc3PJ6QoxoQHgz" />
+    </div>
+    <div class="field" data-page-node-id="EQoaCr2PXt2exTC0AulNJg">
+      <label data-page-node-id="X5lvFZ6GDcsp1BDcBcYYdt">模型名称</label>
+      <input type="text" id="model" placeholder="deepseek-chat" data-page-node-id="YDJwkfKATx9QOayDTA7WkD" />
+    </div>
+    <div class="field" data-page-node-id="Htv4bFl24aD5nUAvjHNLy4">
+      <label data-page-node-id="TDu2R0EBmofmoqvcifFRvI">API Key</label>
+      <input type="text" id="apiKey" placeholder="sk-..." data-page-node-id="gui8Sl3D0dePawGBqBzXSw" />
+    </div>
+    <div class="toggle-row" data-page-node-id="iUkXb0WiaIyPTrx4shUo0H">
+      <span style="font-size:13.5px;color:var(--ink-soft)" data-page-node-id="QtnVAxSuBJHGCWBaSBNHFE">优先使用大模型解读</span>
+      <label class="switch" data-page-node-id="xxOAS2VjB7y0zjhMq1YzW4"><input type="checkbox" id="useLLM" data-page-node-id="VkjbkKly8Mqu4I3IvEJvlg" /><span class="slider" data-page-node-id="0jHUpNaujPdF60eCTy5AC9"></span></label>
+    </div>
+    <button class="btn-line btn-primary" id="saveBtn" data-page-node-id="dWyEMO40aeedY8uzvCixd3">保存设置</button>
+    <button class="btn-line" id="testBtn" data-page-node-id="HXqVaWCnYHKS2dDqSlQv8l">测试连接</button>
+    <div class="note" id="settingNote" data-page-node-id="4BfEDe3e1URFdboNblitks"></div>
+    <p class="note" data-page-node-id="TxfsqVBrw7OBGoziR1fEHq">说明：密钥仅保存在你本机浏览器（localStorage），不会上传到任何第三方。部分接口可能存在浏览器跨域（CORS）限制，若网页直接调用失败，可在本机起一个反向代理后填入自定义地址。</p>
+  </div>
+</div>
+
+<!-- 登录 / 注册弹窗 -->
+<div class="modal-mask" id="authMask" data-page-node-id="xxjJaxFFC7IjWvLcX5oQ3i">
+  <div class="modal" data-page-node-id="mbkEmk6eXOCzFfEAn7VTnN">
+    <h3 id="authTitle" data-page-node-id="ybGlbEgrpZRPbrj8FKCJ58">登录</h3>
+    <p class="sub" id="authSub" data-page-node-id="3GFRq55rOyl9r1da3IsAgh">登录后，你的算卦记录仅你自己可见</p>
+    <div class="field" data-page-node-id="GiE6UMt80HmJYQHvycB58q">
+      <label>昵称</label>
+      <input type="text" id="authUser" placeholder="2–20 个字符" autocomplete="username" data-page-node-id="Mc3Fl5DD7Ee7umHYbkw5A7" />
+    </div>
+    <div class="field" data-page-node-id="hUgVMvySw2sNC7NmQ9HiJl">
+      <label>口令（本机保管）</label>
+      <input type="password" id="authPass" placeholder="至少 4 位" autocomplete="current-password" data-page-node-id="4nzXV82GX8GOt742HL08m7" />
+    </div>
+    <div class="err-msg" id="authErr" data-page-node-id="V1PVuC9xXHEOvdOo8s3hu5"></div>
+    <label class="remember-row" data-page-node-id="pTYObFhzTGz7HsBF2BXiF2"><input type="checkbox" id="authRemember" checked data-page-node-id="jlqHqknKPHULSQkv46DGTo" /><span data-page-node-id="mjmwiv0bJJjFNGjucxBiJL">记住昵称，下次自动进入</span></label>
+    <button class="btn-line btn-primary" id="authSubmit" data-page-node-id="GeATpDWHaTcpNzSwt5KSg6">登录</button>
+    <div class="switch-mode" id="authSwitch" data-page-node-id="tQTuowTwkywS5VgoVmFCab"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" data-page-node-id="X6egAAKOEynv1zOnEBAIJY"></div>
+
+<!-- 大模型 API 未配置提示 -->
+<div class="modal-mask" id="apiNeededMask" data-page-node-id="yjApiMask">
+  <div class="modal" data-page-node-id="yjApiModal">
+    <h3 data-page-node-id="yjApiTitle">需要配置大模型 API</h3>
+    <p class="sub" data-page-node-id="yjApiSub">开启「大模型解读」前，请先填写接口信息。路径：点击右上角 <b>⚙ 设置</b> → 在「大模型设置」中填写接口服务商、模型名称与 API Key，保存后即可开启。</p>
+    <button class="btn-line btn-primary" id="apiNeededGo" data-page-node-id="yjApiGo">前往设置</button>
+    <button class="btn-line" id="apiNeededClose" data-page-node-id="yjApiClose">稍后再说</button>
+  </div>
+</div>
+
+<!-- 分享卡片预览 -->
+<div class="share-mask" id="shareMask" data-page-node-id="WvI84ZZH5vJZ6tWF1YsqjX">
+  <div class="share-modal" data-page-node-id="engEDMhoymazNgLdbD4rHp">
+    <div class="share-modal-h" data-page-node-id="jMMhztorfGB3cbw3pWNz3I"><span class="dot" data-page-node-id="xeZOydYbxK9GH4n7lbMOez"></span>分享卡片预览<button class="share-close" id="shareClose" aria-label="关闭" data-page-node-id="DXl3Uby7Honk8x7HFVnD5z">×</button></div>
+    <div class="share-canvas-wrap" data-page-node-id="OADFrxWC1EvJ9le8oQ9GN7"><img id="shareImg" alt="分享卡片预览" data-page-node-id="f5Y87JJ2noqlxZOnek4G4X" /></div>
+    <div class="share-modal-foot" data-page-node-id="OtS1nLvbAQvKNgp67mL5kW">
+      <button class="btn-line" id="shareClose2" data-page-node-id="GHX9rIUAnSCgkMpcL6zZKq">关闭</button>
+      <button class="btn-line btn-primary" id="shareDownload" data-page-node-id="BU1vWgHrcXqkTTHwDEouUn">下载卡片</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== 易经排盘引擎（纯 JS，移植自 paipan.py，无外部依赖） ===== */
+const LUNAR = {"1900":{"ny":[1,31],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,8,1],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1901":{"ny":[2,19],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1902":{"ny":[2,8],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1903":{"ny":[1,29],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,5,1],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1904":{"ny":[2,16],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1905":{"ny":[2,4],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1906":{"ny":[1,25],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,4,1],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1907":{"ny":[2,13],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1908":{"ny":[2,2],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1909":{"ny":[1,22],"ms":[[29,1,0],[30,2,0],[29,2,1],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1910":{"ny":[2,10],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1911":{"ny":[1,30],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,6,1],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1912":{"ny":[2,18],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1913":{"ny":[2,6],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1914":{"ny":[1,26],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,5,1],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1915":{"ny":[2,14],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[29,12,0]]},"1916":{"ny":[2,3],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1917":{"ny":[1,23],"ms":[[30,1,0],[29,2,0],[29,2,1],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1918":{"ny":[2,11],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1919":{"ny":[2,1],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,7,1],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1920":{"ny":[2,20],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1921":{"ny":[2,8],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1922":{"ny":[1,28],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[29,5,1],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1923":{"ny":[2,16],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1924":{"ny":[2,5],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[29,12,0]]},"1925":{"ny":[1,24],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,4,1],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1926":{"ny":[2,13],"ms":[[29,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1927":{"ny":[2,2],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1928":{"ny":[1,23],"ms":[[29,1,0],[30,2,0],[29,2,1],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1929":{"ny":[2,10],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1930":{"ny":[1,30],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,6,1],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1931":{"ny":[2,17],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1932":{"ny":[2,6],"ms":[[30,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1933":{"ny":[1,26],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[30,5,1],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[29,11,0],[30,12,0]]},"1934":{"ny":[2,14],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1935":{"ny":[2,4],"ms":[[29,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1936":{"ny":[1,24],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,3,1],[29,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1937":{"ny":[2,11],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1938":{"ny":[1,31],"ms":[[30,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,7,1],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1939":{"ny":[2,19],"ms":[[30,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1940":{"ny":[2,8],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1941":{"ny":[1,27],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,6,1],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1942":{"ny":[2,15],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1943":{"ny":[2,5],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1944":{"ny":[1,25],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,4,1],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1945":{"ny":[2,13],"ms":[[29,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1946":{"ny":[2,2],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1947":{"ny":[1,22],"ms":[[30,1,0],[30,2,0],[29,2,1],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1948":{"ny":[2,10],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1949":{"ny":[1,29],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[29,7,1],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1950":{"ny":[2,17],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1951":{"ny":[2,6],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1952":{"ny":[1,27],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,5,1],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1953":{"ny":[2,14],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1954":{"ny":[2,3],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1955":{"ny":[1,24],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,3,1],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1956":{"ny":[2,12],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1957":{"ny":[1,31],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,8,1],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1958":{"ny":[2,18],"ms":[[30,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1959":{"ny":[2,8],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1960":{"ny":[1,28],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,6,1],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1961":{"ny":[2,15],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1962":{"ny":[2,5],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1963":{"ny":[1,25],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,4,1],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1964":{"ny":[2,13],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1965":{"ny":[2,2],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1966":{"ny":[1,21],"ms":[[30,1,0],[30,2,0],[30,3,0],[29,3,1],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1967":{"ny":[2,9],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1968":{"ny":[1,30],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,7,0],[29,7,1],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1969":{"ny":[2,17],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1970":{"ny":[2,6],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1971":{"ny":[1,27],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,5,1],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1972":{"ny":[2,15],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1973":{"ny":[2,3],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1974":{"ny":[1,23],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,4,1],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1975":{"ny":[2,11],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1976":{"ny":[1,31],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,8,1],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1977":{"ny":[2,18],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[29,12,0]]},"1978":{"ny":[2,7],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1979":{"ny":[1,28],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,6,1],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1980":{"ny":[2,16],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1981":{"ny":[2,5],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1982":{"ny":[1,25],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,4,1],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1983":{"ny":[2,13],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1984":{"ny":[2,2],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,10,1],[30,11,0],[30,12,0]]},"1985":{"ny":[2,20],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1986":{"ny":[2,9],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[29,12,0]]},"1987":{"ny":[1,29],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,6,1],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[29,12,0]]},"1988":{"ny":[2,17],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1989":{"ny":[2,6],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1990":{"ny":[1,27],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,5,1],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1991":{"ny":[2,15],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"1992":{"ny":[2,4],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"1993":{"ny":[1,23],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,3,1],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"1994":{"ny":[2,10],"ms":[[30,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1995":{"ny":[1,31],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,8,1],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1996":{"ny":[2,19],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[29,12,0]]},"1997":{"ny":[2,7],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"1998":{"ny":[1,28],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[29,5,1],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"1999":{"ny":[2,16],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2000":{"ny":[2,5],"ms":[[30,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2001":{"ny":[1,24],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,4,1],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2002":{"ny":[2,12],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2003":{"ny":[2,1],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2004":{"ny":[1,22],"ms":[[29,1,0],[30,2,0],[29,2,1],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2005":{"ny":[2,9],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2006":{"ny":[1,29],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,7,1],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2007":{"ny":[2,18],"ms":[[29,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2008":{"ny":[2,7],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2009":{"ny":[1,26],"ms":[[30,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,5,1],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2010":{"ny":[2,14],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2011":{"ny":[2,3],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2012":{"ny":[1,23],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,4,1],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2013":{"ny":[2,10],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2014":{"ny":[1,31],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,9,1],[30,10,0],[29,11,0],[30,12,0]]},"2015":{"ny":[2,19],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2016":{"ny":[2,8],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2017":{"ny":[1,28],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,6,1],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"2018":{"ny":[2,16],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2019":{"ny":[2,5],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2020":{"ny":[1,25],"ms":[[29,1,0],[30,2,0],[30,3,0],[30,4,0],[29,4,1],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2021":{"ny":[2,12],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2022":{"ny":[2,1],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2023":{"ny":[1,22],"ms":[[29,1,0],[30,2,0],[29,2,1],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2024":{"ny":[2,10],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2025":{"ny":[1,29],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,6,1],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2026":{"ny":[2,17],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2027":{"ny":[2,6],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2028":{"ny":[1,26],"ms":[[30,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,5,1],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2029":{"ny":[2,13],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2030":{"ny":[2,3],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2031":{"ny":[1,23],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,3,1],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2032":{"ny":[2,11],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2033":{"ny":[1,31],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,11,1],[30,12,0]]},"2034":{"ny":[2,19],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2035":{"ny":[2,8],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2036":{"ny":[1,28],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,6,1],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2037":{"ny":[2,15],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2038":{"ny":[2,4],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2039":{"ny":[1,24],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,5,1],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[29,12,0]]},"2040":{"ny":[2,12],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2041":{"ny":[2,1],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2042":{"ny":[1,22],"ms":[[29,1,0],[30,2,0],[29,2,1],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2043":{"ny":[2,10],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2044":{"ny":[1,30],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,7,1],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"2045":{"ny":[2,17],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2046":{"ny":[2,6],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2047":{"ny":[1,26],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,5,1],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2048":{"ny":[2,14],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2049":{"ny":[2,2],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2050":{"ny":[1,23],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,3,1],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2051":{"ny":[2,11],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"2052":{"ny":[2,1],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,8,1],[30,9,0],[30,10,0],[30,11,0],[30,12,0]]},"2053":{"ny":[2,19],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"2054":{"ny":[2,8],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2055":{"ny":[1,28],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,6,1],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2056":{"ny":[2,15],"ms":[[30,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2057":{"ny":[2,4],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2058":{"ny":[1,24],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,4,1],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[29,12,0]]},"2059":{"ny":[2,12],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2060":{"ny":[2,2],"ms":[[30,1,0],[29,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2061":{"ny":[1,21],"ms":[[30,1,0],[30,2,0],[29,3,0],[29,3,1],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2062":{"ny":[2,9],"ms":[[30,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2063":{"ny":[1,29],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[29,7,1],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2064":{"ny":[2,17],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2065":{"ny":[2,5],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2066":{"ny":[1,26],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,5,1],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2067":{"ny":[2,14],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2068":{"ny":[2,3],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2069":{"ny":[1,23],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,4,1],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2070":{"ny":[2,11],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2071":{"ny":[1,31],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,8,1],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2072":{"ny":[2,19],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2073":{"ny":[2,7],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2074":{"ny":[1,27],"ms":[[30,1,0],[29,2,0],[30,3,0],[30,4,0],[29,5,0],[30,6,0],[29,6,1],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2075":{"ny":[2,15],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2076":{"ny":[2,5],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2077":{"ny":[1,24],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,4,1],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2078":{"ny":[2,12],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2079":{"ny":[2,2],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2080":{"ny":[1,22],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,3,1],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"2081":{"ny":[2,9],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2082":{"ny":[1,29],"ms":[[29,1,0],[30,2,0],[30,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,7,1],[30,8,0],[29,9,0],[29,10,0],[30,11,0],[30,12,0]]},"2083":{"ny":[2,17],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2084":{"ny":[2,6],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[30,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2085":{"ny":[1,26],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[30,5,1],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2086":{"ny":[2,14],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2087":{"ny":[2,3],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[30,12,0]]},"2088":{"ny":[1,24],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,4,1],[29,5,0],[30,6,0],[29,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2089":{"ny":[2,10],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2090":{"ny":[1,30],"ms":[[30,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[29,8,1],[29,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2091":{"ny":[2,18],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2092":{"ny":[2,7],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2093":{"ny":[1,27],"ms":[[29,1,0],[30,2,0],[30,3,0],[29,4,0],[30,5,0],[29,6,0],[30,6,1],[30,7,0],[29,8,0],[30,9,0],[29,10,0],[30,11,0],[29,12,0]]},"2094":{"ny":[2,15],"ms":[[29,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2095":{"ny":[2,5],"ms":[[29,1,0],[30,2,0],[29,3,0],[29,4,0],[30,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[30,11,0],[29,12,0]]},"2096":{"ny":[1,25],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,4,1],[30,5,0],[29,6,0],[29,7,0],[30,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2097":{"ny":[2,12],"ms":[[30,1,0],[29,2,0],[30,3,0],[29,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[30,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2098":{"ny":[2,1],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[29,6,0],[29,7,0],[30,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2099":{"ny":[1,21],"ms":[[30,1,0],[30,2,0],[29,2,1],[30,3,0],[30,4,0],[29,5,0],[29,6,0],[30,7,0],[29,8,0],[29,9,0],[30,10,0],[29,11,0],[30,12,0]]},"2100":{"ny":[2,9],"ms":[[30,1,0],[30,2,0],[29,3,0],[30,4,0],[29,5,0],[30,6,0],[29,7,0],[30,8,0],[29,9,0],[29,10,0],[30,11,0],[29,12,0]]}};
+
+const BAGUA = {
+  1: { name: "乾", sym: "☰", wuxing: "金", nature: "天", bits: [1, 1, 1], dir: "西北", xiang: "刚健、主动、上级、权威" },
+  2: { name: "兑", sym: "☱", wuxing: "金", nature: "泽", bits: [1, 1, 0], dir: "西", xiang: "喜悦、口舌、少女、沟通" },
+  3: { name: "离", sym: "☲", wuxing: "火", nature: "火", bits: [1, 0, 1], dir: "南", xiang: "光明、文书、显露、中女" },
+  4: { name: "震", sym: "☳", wuxing: "木", nature: "雷", bits: [1, 0, 0], dir: "东", xiang: "动、惊、发起、长男" },
+  5: { name: "巽", sym: "☴", wuxing: "木", nature: "风", bits: [0, 1, 1], dir: "东南", xiang: "入、顺、渗透、长女" },
+  6: { name: "坎", sym: "☵", wuxing: "水", nature: "水", bits: [0, 1, 0], dir: "北", xiang: "险、劳、暗中、中男" },
+  7: { name: "艮", sym: "☶", wuxing: "土", nature: "山", bits: [0, 0, 1], dir: "东北", xiang: "止、阻、停留、少男" },
+  8: { name: "坤", sym: "☷", wuxing: "土", nature: "地", bits: [0, 0, 0], dir: "西南", xiang: "顺、承载、众人、老母" },
+};
+
+const GUA64 = {
+  1: { 1: ["乾为天", 1], 2: ["天泽履", 10], 3: ["天火同人", 13], 4: ["天雷无妄", 25], 5: ["天风姤", 44], 6: ["天水讼", 6], 7: ["天山遁", 33], 8: ["天地否", 12] },
+  2: { 1: ["泽天夬", 43], 2: ["兑为泽", 58], 3: ["泽火革", 49], 4: ["泽雷随", 17], 5: ["泽风大过", 28], 6: ["泽水困", 47], 7: ["泽山咸", 31], 8: ["泽地萃", 45] },
+  3: { 1: ["火天大有", 14], 2: ["火泽睽", 38], 3: ["离为火", 30], 4: ["火雷噬嗑", 21], 5: ["火风鼎", 50], 6: ["火水未济", 64], 7: ["火山旅", 56], 8: ["火地晋", 35] },
+  4: { 1: ["雷天大壮", 34], 2: ["雷泽归妹", 54], 3: ["雷火丰", 55], 4: ["震为雷", 51], 5: ["雷风恒", 32], 6: ["雷水解", 40], 7: ["雷山小过", 62], 8: ["雷地豫", 16] },
+  5: { 1: ["风天小畜", 9], 2: ["风泽中孚", 61], 3: ["风火家人", 37], 4: ["风雷益", 42], 5: ["巽为风", 57], 6: ["风水涣", 59], 7: ["风山渐", 53], 8: ["风地观", 20] },
+  6: { 1: ["水天需", 5], 2: ["水泽节", 60], 3: ["水火既济", 63], 4: ["水雷屯", 3], 5: ["水风井", 48], 6: ["坎为水", 29], 7: ["水山蹇", 39], 8: ["水地比", 8] },
+  7: { 1: ["山天大畜", 26], 2: ["山泽损", 41], 3: ["山火贲", 22], 4: ["山雷颐", 27], 5: ["山风蛊", 18], 6: ["山水蒙", 4], 7: ["艮为山", 52], 8: ["山地剥", 23] },
+  8: { 1: ["地天泰", 11], 2: ["地泽临", 19], 3: ["地火明夷", 36], 4: ["地雷复", 24], 5: ["地风升", 46], 6: ["地水师", 7], 7: ["地山谦", 15], 8: ["坤为地", 2] },
+};
+
+const XIAOLIUREN = [
+  { no: 1, name: "大安", wuxing: "木", dir: "东方", color: "青", luck: "吉", jue: "大安事事昌，求财在东方，失物去不远，宅舍保平安，行人身未动，病者主无妨，将军回田地，仔细好推详。", yao: "主安稳、事情按部就班、不宜急躁变卦；人也多主静、暂未行动。" },
+  { no: 2, name: "留连", wuxing: "水", dir: "北方", color: "黑", luck: "凶", jue: "留连事难成，求谋日未明，官事只宜缓，去者未回程，失物南方见，急讨方称心，更须防口舌，人口且平平。", yao: "主拖延、反复、事难速成；拖得越久越不利，宜缓不宜急，防口舌纠纷。" },
+  { no: 3, name: "速喜", wuxing: "火", dir: "南方", color: "赤", luck: "吉", jue: "速喜喜来临，求财向南行，失物申未午，逢人路上寻，官事有福德，病者无祸侵，田宅六畜吉，行人有信音。", yao: "主快速、喜讯、消息将至；事情推进会比预想快，宜把握当下时机。" },
+  { no: 4, name: "赤口", wuxing: "金", dir: "西方", color: "白", luck: "凶", jue: "赤口主口舌，官非切要防，失物急去寻，行人有惊慌，鸡犬多作怪，病者出西方，更须防咒诅，恐怕染瘟殃。", yao: "主口舌、争执、是非、合约纠纷；宜守不宜争，文书合同要逐条看。" },
+  { no: 5, name: "小吉", wuxing: "木", dir: "东方", color: "黄", luck: "大吉", jue: "小吉最吉昌，路上好商量，阴人来报喜，失物在坤方，行人即便至，交易甚是强，凡事皆和合，病者祈上苍。", yao: "主和合、有贵人相助、事情好商量；合作、谈判、牵线类的事最有利。" },
+  { no: 6, name: "空亡", wuxing: "土", dir: "中央", color: "黄", luck: "大凶", jue: "空亡事不祥，阴人多乖张，求财无利益，行人有灾殃，失物寻不见，官事有刑伤，病人逢暗鬼，祈禳保安康。", yao: "主落空、白忙、信息不实；事情可能根本不会有结果，或对方在打太极。" },
+];
+
+const ZHI_NUM = { "子": 1, "丑": 2, "寅": 3, "卯": 4, "辰": 5, "巳": 6, "午": 7, "未": 8, "申": 9, "酉": 10, "戌": 11, "亥": 12 };
+const SHENG = { "木": "火", "火": "土", "土": "金", "金": "水", "水": "木" };
+const KE = { "木": "土", "土": "水", "水": "火", "火": "金", "金": "木" };
+const GAN = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
+const ZHI = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+const MONTH_CN = { 1: "正", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "七", 8: "八", 9: "九", 10: "十", 11: "冬", 12: "腊" };
+
+function mod_wrap(value, base) { const r = ((value % base) + base) % base; return r === 0 ? base : r; }
+function gua_of(bits) {
+  for (const n in BAGUA) { const b = BAGUA[n].bits; if (b[0] === bits[0] && b[1] === bits[1] && b[2] === bits[2]) return +n; }
+  throw new Error("无效爻象: " + bits);
+}
+function liuyao_of(upper, lower) { return BAGUA[lower].bits.concat(BAGUA[upper].bits); }
+function gua_name(upper, lower) {
+  const v = GUA64[upper][lower];
+  return { name: v[0], seq: v[1], upper: BAGUA[upper].name, lower: BAGUA[lower].name, upper_num: upper, lower_num: lower, symbol: BAGUA[upper].sym + BAGUA[lower].sym };
+}
+function hu_gua(upper, lower) {
+  const y = liuyao_of(upper, lower);
+  const lower_new = gua_of([y[1], y[2], y[3]]);
+  const upper_new = gua_of([y[2], y[3], y[4]]);
+  return gua_name(upper_new, lower_new);
+}
+function bian_gua(upper, lower, dong) {
+  const y = liuyao_of(upper, lower);
+  y[dong - 1] = 1 - y[dong - 1];
+  const lower_new = gua_of(y.slice(0, 3));
+  const upper_new = gua_of(y.slice(3, 6));
+  return gua_name(upper_new, lower_new);
+}
+function ti_yong(upper, lower, dong) {
+  let yong_num, ti_num, yong_pos, ti_pos;
+  if (dong <= 3) { yong_num = lower; ti_num = upper; yong_pos = "下卦（内卦）"; ti_pos = "上卦（外卦）"; }
+  else { yong_num = upper; ti_num = lower; yong_pos = "上卦（外卦）"; ti_pos = "下卦（内卦）"; }
+  return {
+    ti: { name: BAGUA[ti_num].name, wuxing: BAGUA[ti_num].wuxing, position: ti_pos },
+    yong: { name: BAGUA[yong_num].name, wuxing: BAGUA[yong_num].wuxing, position: yong_pos },
+  };
+}
+function yao_ti(pos, is_yang) {
+  if (pos === 1) return is_yang ? "初九" : "初六";
+  if (pos === 6) return is_yang ? "上九" : "上六";
+  return (is_yang ? "九" : "六") + "二三四五"[pos - 2];
+}
+function relation(ti_wx, yong_wx) {
+  if (ti_wx === yong_wx) return { relation: "体用比和", level: "吉", note: "两卦同气，事情顺遂，不费力，也主事情与你本行相关。" };
+  if (SHENG[yong_wx] === ti_wx) return { relation: "用生体", level: "吉", note: "外部资源来助你，有人帮、有流量有钱进来，可顺势推进。" };
+  if (KE[ti_wx] === yong_wx) return { relation: "体克用", level: "吉", note: "你能掌控局面，但需要你主动出手，坐等不来。" };
+  if (SHENG[ti_wx] === yong_wx) return { relation: "体生用", level: "小凶", note: "你在持续投入消耗，成果却归对方，注意别做赔本买卖。" };
+  return { relation: "用克体", level: "凶", note: "外部力量压制你，事与愿违，强求必受损，宜退守观望。" };
+}
+
+/* ---- 农历换算（基于内置查表，范围 1900-2100） ---- */
+function solar2lunar(y, mo, d) {
+  const years = Object.keys(LUNAR).map(Number).sort((a, b) => a - b);
+  let key = null;
+  for (const Y of years) {
+    const ny = LUNAR[Y].ny;
+    const nY = Y + 1;
+    const nny = LUNAR[nY] ? LUNAR[nY].ny : [12, 31];
+    const afterStart = (y > Y) || (y === Y && (mo > ny[0] || (mo === ny[0] && d >= ny[1])));
+    const beforeEnd = (y < nY) || (y === nY && (mo < nny[0] || (mo === nny[0] && d < nny[1])));
+    if (afterStart && beforeEnd) { key = Y; break; }
+  }
+  if (key === null) {
+    for (const Y of years) { const ny = LUNAR[Y].ny; if ((y > Y) || (y === Y && (mo > ny[0] || (mo === ny[0] && d >= ny[1])))) key = Y; }
+  }
+  const ny = LUNAR[key].ny, ms = LUNAR[key].ms;
+  const d0 = Date.UTC(key, ny[0] - 1, ny[1]);
+  const d1 = Date.UTC(y, mo - 1, d);
+  let diff = Math.round((d1 - d0) / 86400000);
+  for (const row of ms) {
+    const ln = row[0];
+    if (diff < ln) return { year: key, month: row[1], day: diff + 1, isLeap: !!row[2] };
+    diff -= ln;
+  }
+  const last = ms[ms.length - 1];
+  return { year: key, month: last[1], day: 1, isLeap: false };
+}
+function monthCN(absm, isLeap) { return (isLeap ? "闰" : "") + (MONTH_CN[absm] || absm) + "月"; }
+function dayCN(d) {
+  const dig = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+  if (d === 10) return "初十";
+  if (d === 20) return "二十";
+  if (d === 30) return "三十";
+  if (d < 10) return "初" + dig[d];
+  if (d < 20) return "十" + dig[d - 10];
+  if (d < 30) return "廿" + dig[d - 20];
+  return "" + d;
+}
+function shichenNum(h) { if (h === 23 || h === 0) return 1; return Math.floor((h + 1) / 2) + 1; }
+function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+function time_context(dt) {
+  const solar = `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())} ${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
+  const weekday = "星期" + "日一二三四五六"[dt.getDay()];
+  const L = solar2lunar(dt.getFullYear(), dt.getMonth() + 1, dt.getDate());
+  const yb = L.year - 4;
+  const yg = GAN[((yb % 10) + 10) % 10], yz = ZHI[((yb % 12) + 12) % 12];
+  const year_zhi_num = ((yb % 12) + 12) % 12 + 1;
+  const shichen_num = shichenNum(dt.getHours());
+  const shichen = ZHI[shichen_num - 1] + "时";
+  const lunar = `农历${yg}${yz}年${monthCN(L.month, L.isLeap)}${dayCN(L.day)}`;
+  return { solar, weekday, lunar, year_ganzhi: yg + yz, year_zhi: yz, year_zhi_num, month_lunar: L.month, day_lunar: L.day, isLeap: L.isLeap, shichen, shichen_num };
+}
+
+/* ---- 梅花易数 ---- */
+function meihua_numbers(nums, ctx) {
+  const T = ctx.shichen_num; // 当前时辰数，作为补充条件参与动爻推算
+  const n = nums.length; let a, b, upper, lower, dong, basis;
+  if (n === 1) {
+    const s = String(nums[0]);
+    if (s.length >= 2) {
+      const mid = Math.floor(s.length / 2);
+      a = parseInt(s.slice(0, mid), 10); b = parseInt(s.slice(mid), 10);
+      basis = `单数拆位：${s} -> 上卦数 ${a}、下卦数 ${b}；动爻在两数之和的基础上，再叠加当前时辰（${ctx.shichen}）做一次微调`;
+    } else {
+      a = nums[0]; b = nums[0] + T;
+      basis = `单个数字 ${a}：上卦取 ${a}，下卦补当前时辰（${ctx.shichen}=${T}）；动爻同步叠加当前时辰微调`;
+    }
+    upper = mod_wrap(a, 8); lower = mod_wrap(b, 8); dong = mod_wrap(a + b, 6);
+  } else if (n === 2) {
+    a = nums[0]; b = nums[1];
+    upper = mod_wrap(a, 8); lower = mod_wrap(b, 8); dong = mod_wrap(a + b + T, 6);
+    basis = `两数起卦：上卦 ${a}、下卦 ${b}；动爻取两数之和，再叠加当前时辰（${ctx.shichen}）微调`;
+  } else {
+    a = nums[0]; b = nums[1]; const c = nums[2];
+    upper = mod_wrap(a, 8); lower = mod_wrap(b, 8); dong = mod_wrap(c + T, 6);
+    basis = `三数起卦：上卦 ${a}、下卦 ${b}、第三数 ${c} 定动爻，再叠加当前时辰（${ctx.shichen}）微调`;
+    if (n > 3) basis += `（提供了 ${n} 个数，取前三）`;
+  }
+  return { upper, lower, dong, basis };
+}
+/* 时间起卦已移除：本系统仅支持数字起卦，当前时间仅自动作为补充条件参与推算 */
+function run_meihua(nums, ctx) {
+  if (!nums || !nums.length) throw new Error("梅花易数需要至少一个起卦数字");
+  const r = meihua_numbers(nums, ctx);
+  r.method = "数字起卦";
+  const upper = r.upper, lower = r.lower, dong = r.dong;
+  const ben = gua_name(upper, lower);
+  const hu = hu_gua(upper, lower);
+  const bian = bian_gua(upper, lower, dong);
+  const ty = ti_yong(upper, lower, dong);
+  const rel = relation(ty.ti.wuxing, ty.yong.wuxing);
+  const y = liuyao_of(upper, lower);
+  const bian_y = y.slice();
+  bian_y[dong - 1] = 1 - bian_y[dong - 1];
+  return {
+    mode: "梅花易数", method: r.method, basis: r.basis, time_supplement: ctx.shichen_num,
+    dong_yao: dong, dong_yao_label: "第" + "一二三四五六"[dong - 1] + "爻",
+    dong_gua_wuxing: BAGUA[lower <= 3 ? lower : upper] ? BAGUA[dong <= 3 ? lower : upper].wuxing : BAGUA[upper].wuxing,
+    ben_gua: ben, hu_gua: hu, bian_gua: bian,
+    ti: ty.ti, yong: ty.yong, ti_yong: rel,
+    liuyao: y.map((v, i) => ({ pos: i + 1, yao_ti: yao_ti(i + 1, !!v), yang: !!v, is_dong: i + 1 === dong, after_change: !!bian_y[i] })),
+    dong_yao_ti: yao_ti(dong, !!y[dong - 1]),
+  };
+}
+
+/* ---- 小六壬 ---- */
+function xlr_step(start, count) { return (start + count - 1) % 6; }
+function run_xiaoliuren(nums, ctx) {
+  // 仅支持数字起卦：用户输入 1–3 个数，依次作为 月位/日位/时位 三步
+  let used = (nums && nums.length) ? nums.slice(0, 3) : [];
+  if (used.length === 0) throw new Error("小六壬需要至少 1 个起卦数字");
+  while (used.length < 3) used.push(used[used.length - 1]); // 不足 3 个时，重复最后一个数补齐
+  const month = used[0], day = used[1], hour = used[2];
+  const T = ctx.shichen_num; // 当前时辰，作为补充条件参与终宫微调
+  const i1 = xlr_step(0, month);
+  const i2 = xlr_step(i1, day);
+  const i3 = xlr_step(i2, hour);
+  const i4 = xlr_step(i3, T); // 叠加当前时辰做一次微调
+  const basis = `数字起卦：月位 ${month}、日位 ${day}、时位 ${hour}（你提供的数字）；再叠加当前时辰（${ctx.shichen}=${T}）做一次微调`;
+  return {
+    mode: "小六壬", method: "数字起卦", basis, time_supplement: T,
+    steps: [
+      { from: "大安", count: month, unit: "月位", land: XIAOLIUREN[i1].name },
+      { from: XIAOLIUREN[i1].name, count: day, unit: "日位", land: XIAOLIUREN[i2].name },
+      { from: XIAOLIUREN[i2].name, count: hour, unit: "时位", land: XIAOLIUREN[i3].name },
+      { from: XIAOLIUREN[i3].name, count: T, unit: "时辰微调", land: XIAOLIUREN[i4].name }
+    ],
+    result: XIAOLIUREN[i4], first_land: XIAOLIUREN[i1].name, second_land: XIAOLIUREN[i2].name,
+  };
+}
+
+if (typeof module !== "undefined") {
+  module.exports = { BAGUA, GUA64, XIAOLIUREN, run_meihua, run_xiaoliuren, time_context, solar2lunar, mod_wrap };
+}
+
+(function () {
+  "use strict";
+  var $ = function (s) { return document.querySelector(s); };
+  /* ============ 模块状态（两模块彻底隔离） ============ */
+  var MODE_LABEL = { meihua: "梅花易数", xiaoliuren: "小六壬" };
+  function labelOf(mode) { return MODE_LABEL[mode] || "梅花易数"; }
+  function modeKey(label) { return label === "小六壬" ? "xiaoliuren" : "meihua"; }
+
+  var state = { mode: "meihua" };
+  // 每个模块独立的状态来源：输入、排盘、报告、草稿记录、是否已有结果
+  function newModuleState() {
+    return { question: "", numbers: "", pan: null, report: null, src: null, hasResult: false, draftId: null, draftCreatedAt: null };
+  }
+  var modules = { meihua: newModuleState(), xiaoliuren: newModuleState() };
+  function cur() { return modules[state.mode]; }
+  function curPane() { return state.mode === "xiaoliuren" ? $("#resultXlr") : $("#resultMeihua"); }
+  function otherMode() { return state.mode === "xiaoliuren" ? "meihua" : "xiaoliuren"; }
+
+  var currentUsername = null;
+  var currentView = null;   // 当前展示的记录 {question, mode, numbers, time, pan, report, createdAt, id}
+  var lastView = null;      // 最近一次渲染的报告视图，供分享使用
+  var currentShareURL = null;
+  var authMode = "login";
+
+  /* ============ 设置 ============ */
+  var LS_KEY = "yijing_llm_v1";
+  function loadCfg() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch (e) { return {}; } }
+  function saveCfg(c) { localStorage.setItem(LS_KEY, JSON.stringify(c)); }
+  var cfg = loadCfg();
+  $("#preset").value = cfg.preset || "https://api.deepseek.com/v1";
+  $("#baseCustom").value = cfg.baseCustom || "";
+  $("#model").value = cfg.model || "deepseek-chat";
+  $("#apiKey").value = cfg.apiKey || "";
+  $("#useLLM").checked = !!cfg.useLLM;
+  function syncBaseField() { $("#baseField").style.display = $("#preset").value === "custom" ? "block" : "none"; }
+  syncBaseField();
+  $("#preset").addEventListener("change", syncBaseField);
+  $("#gearBtn").addEventListener("click", function () { $("#mask").classList.add("show"); $("#drawer").classList.add("show"); });
+  $("#mask").addEventListener("click", function () { $("#mask").classList.remove("show"); $("#drawer").classList.remove("show"); });
+
+  /* 主页面「大模型解读」开关：与抽屉里的设置互相同步；开启但未配置 API 时弹窗提示 */
+  function hasLLMKey() { return !!(cfg.apiKey && cfg.apiKey.trim()); }
+  function syncLLMToggles() {
+    var on = !!cfg.useLLM;
+    $("#useLLM").checked = on;
+    if ($("#useLLMMain")) $("#useLLMMain").checked = on;
+  }
+  function setLLM(on) {
+    if (on && !hasLLMKey()) {                 // 未配置 API：还原开关并提示
+      syncLLMToggles();
+      cfg.useLLM = false; saveCfg(cfg);
+      if ($("#apiNeededMask")) $("#apiNeededMask").classList.add("show");
+      return;
+    }
+    cfg.useLLM = on; saveCfg(cfg); syncLLMToggles();
+    showToast(on ? "已开启大模型解读" : "已切换为内置模板解读");
+  }
+  syncLLMToggles();
+  if ($("#useLLMMain")) $("#useLLMMain").addEventListener("change", function () { setLLM(this.checked); });
+  $("#useLLM").addEventListener("change", function () { setLLM(this.checked); });
+  if ($("#apiNeededGo")) $("#apiNeededGo").addEventListener("click", function () {
+    if ($("#apiNeededMask")) $("#apiNeededMask").classList.remove("show");
+    $("#mask").classList.add("show"); $("#drawer").classList.add("show");
+    setTimeout(function () { var k = $("#apiKey"); if (k) k.focus(); }, 280);
+  });
+  if ($("#apiNeededClose")) $("#apiNeededClose").addEventListener("click", function () { $("#apiNeededMask").classList.remove("show"); });
+  if ($("#apiNeededMask")) $("#apiNeededMask").addEventListener("click", function (e) { if (e.target === this) this.classList.remove("show"); });
+  $("#saveBtn").addEventListener("click", function () {
+    cfg = { preset: $("#preset").value, baseCustom: $("#baseCustom").value, model: $("#model").value, apiKey: $("#apiKey").value, useLLM: $("#useLLM").checked };
+    if (cfg.useLLM && !hasLLMKey()) {          // 开了大模型解读但没填 Key：提示而非静默保存
+      cfg.useLLM = false; $("#useLLM").checked = false;
+      saveCfg(cfg); syncLLMToggles();
+      $("#settingNote").textContent = "需先填写 API Key 才能开启大模型解读。";
+      if ($("#apiNeededMask")) $("#apiNeededMask").classList.add("show");
+      return;
+    }
+    saveCfg(cfg); syncLLMToggles();
+    $("#settingNote").textContent = "已保存。";
+    setTimeout(function () { $("#settingNote").textContent = ""; }, 1800);
+  });
+  $("#testBtn").addEventListener("click", function () {
+    var note = $("#settingNote"); note.style.color = "var(--slate)"; note.textContent = "测试中……";
+    var c = { base: baseURL(), model: $("#model").value, key: $("#apiKey").value };
+    llmChat(c, "回复两个字：成功", "你是一个测试接口。").then(function () {
+      note.style.color = "var(--slate)"; note.textContent = "连接成功 ✓";
+    }).catch(function (err) {
+      note.style.color = "var(--cinnabar)"; note.textContent = "连接失败：" + err.message;
+    });
+  });
+  function baseURL() {
+    var p = $("#preset").value;
+    return p === "custom" ? $("#baseCustom").value.trim().replace(/\/$/, "") : p.replace(/\/$/, "");
+  }
+
+  /* ============ Tab / 模块切换 ============ */
+  document.querySelectorAll(".tab").forEach(function (t) {
+    t.addEventListener("click", function () { setMode(t.getAttribute("data-mode")); });
+  });
+  // 报告卡片内的跨模块快捷入口（事件委托，卡片是动态生成的）
+  document.addEventListener("click", function (e) {
+    var t = e.target && e.target.closest ? e.target.closest(".cross-link") : null;
+    if (t) { var to = t.getAttribute("data-to"); if (to && modules[to]) setMode(to); }
+  });
+
+  // 切换模块：旧模块输入落库 → 新模块输入回填 → 显示区域切换 → 分享视图重置
+  function setMode(mode) {
+    if (!modules[mode] || mode === state.mode) return;
+    captureInputs();                 // 1. 保存旧模块输入（含问题与数字）
+    state.mode = mode;
+    syncTabs(); updateHint();
+    applyInputs();                   // 2. 回填新模块自己的输入
+    syncPanes();                     // 3. 切换显示区域，两个模块结果互不干扰
+    syncSwitchBtn();
+    lastView = null;                 // 4. 分享视图随模块重置，防止跨模块误分享
+  }
+  function captureInputs() {
+    var m = cur();
+    m.question = $("#question").value;
+    m.numbers = $("#numbers").value;
+  }
+  function applyInputs() {
+    var m = cur();
+    $("#question").value = m.question;
+    $("#numbers").value = m.numbers;
+  }
+  function syncTabs() {
+    document.querySelectorAll(".tab").forEach(function (x) {
+      x.classList.toggle("active", x.getAttribute("data-mode") === state.mode);
+    });
+  }
+  function syncPanes() {
+    $("#resultMeihua").classList.toggle("active", state.mode === "meihua");
+    $("#resultXlr").classList.toggle("active", state.mode === "xiaoliuren");
+  }
+  function syncSwitchBtn() {
+    var b = $("#switchBtn");
+    if (!b) return;
+    b.textContent = state.mode === "xiaoliuren" ? "← 梅花易数" : "小六壬 →";
+    b.title = state.mode === "xiaoliuren" ? "切换到梅花易数" : "切换到小六壬";
+  }
+  function crossEntry() {
+    var to = otherMode();
+    return '<button type="button" class="cross-link" data-to="' + to + '">去' + labelOf(to) + (state.mode === "xiaoliuren" ? " ←" : " →") + "</button>";
+  }
+  function updateHint() {
+    var h = $("#numHint");
+    if (state.mode === "xiaoliuren") {
+      h.innerHTML = '三个数字依次对应 月位 / 日位 / 时位；同一组数字在不同时辰起卦，结果会略有不同。';
+    } else {
+      h.innerHTML = '同一组数字在不同时辰起卦，结果会略有不同。';
+    }
+  }
+
+  /* ============ 解析数字 ============ */
+  function parseNumbers(text) {
+    var t = (text || "").trim();
+    if (!t) return [];
+    var cleaned = t.replace(/[，,、]/g, " ").replace(/和/g, " ");
+    if (/\s/.test(cleaned)) {
+      return cleaned.split(/\s+/).map(function (x) { return parseInt(x, 10); }).filter(function (n) { return !isNaN(n); });
+    }
+    return [parseInt(t, 10)];
+  }
+
+  /* ============ 起卦 ============ */
+  $("#goBtn").addEventListener("click", function () {
+    captureInputs();
+    var m = cur();
+    var q = m.question.trim();
+    var nums = parseNumbers(m.numbers);
+    if (nums.length === 0) { showError("请先填写三个 1–9 的数字（可重复），例如 3 5 7。"); return; }
+    var ctx = time_context(new Date());
+    var pan;
+    try {
+      pan = (state.mode === "meihua") ? run_meihua(nums, ctx) : run_xiaoliuren(nums, ctx);
+    } catch (e) { showError("起卦出错：" + e.message); return; }
+    pan.question = q || "（未提供具体问题）";
+    pan.time = ctx;
+    pan.rawInput = m.numbers.trim();
+    m.pan = pan; m.hasResult = true;
+    renderPan(pan);
+    produceReport(pan, function (p, rep, src) {
+      m.report = rep; m.src = src;
+      renderReportCard(p, rep, src);
+      persistResult(p, rep, src, nums);
+    });
+  });
+
+  /* 新建占卜：生成一条草稿记录，并清空当前模块的界面数据（不显示上一卦） */
+  $("#newBtn").addEventListener("click", function () {
+    if (!currentUsername) { showAuth("login"); return; }
+    captureInputs();
+    var m = cur();
+    if (m.draftId) { showToast("已有一条新建占卜，填写数字后点击「起卦」即可"); return; }
+    var payload = { question: m.question.trim(), mode: labelOf(state.mode), numbers: [], status: "draft" };
+    api("/api/records", { method: "POST", body: JSON.stringify(payload) }).then(function (r) {
+      if (!r.ok) {
+        if (r.status === 401) showAuth("login");
+        else showToast("新建失败：" + ((r.body && r.body.error) || "未知错误"));
+        return;
+      }
+      m.draftId = r.body.id; m.draftCreatedAt = r.body.createdAt;
+      m.question = ""; m.numbers = ""; m.pan = null; m.report = null; m.hasResult = false;
+      applyInputs();
+      curPane().innerHTML = "";
+      syncPanes();
+      lastView = null; currentView = null;
+      loadHistory(); markActive(r.body.id);
+      showToast("已新建占卜，请填写数字后开始");
+    }).catch(function () { showToast(netErrMsg()); });
+  });
+
+  // 起卦完成后写入历史：当前模块有草稿则更新该草稿，否则新建一条
+  function persistResult(pan, rep, src, nums) {
+    var m = cur();
+    var payload = { question: pan.question, mode: pan.mode, numbers: nums, time: pan.time, pan: pan, report: rep, status: "done" };
+    if (m.draftId) {
+      var draftId = m.draftId;
+      api("/api/records/" + draftId, { method: "PUT", body: JSON.stringify(payload) }).then(function (r) {
+        if (r.ok) {
+          currentView = { question: pan.question, mode: pan.mode, numbers: nums, time: pan.time, pan: pan, report: rep, createdAt: r.body.createdAt, id: draftId };
+          m.draftId = null; m.draftCreatedAt = null;
+          loadHistory(); markActive(draftId);
+        } else {
+          m.draftId = null; m.draftCreatedAt = null;
+          saveRecord(payload);
+        }
+      }).catch(function () { m.draftId = null; m.draftCreatedAt = null; saveRecord(payload); });
+    } else {
+      saveRecord(payload);
+    }
+  }
+
+  /* ============ 排盘渲染 ============ */
+  function showError(msg) {
+    var el = curPane();
+    el.innerHTML = '<div class="card"><div class="err">' + esc(msg) + '</div></div>';
+    syncPanes();
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function renderPan(pan) {
+    var el = curPane();
+    el.innerHTML = "";
+    var html = '<div class="card"><div class="panel-h"><span class="dot"></span>排盘结果 · ' + pan.mode + crossEntry() + "</div>";
+    html += '<div class="meta">';
+    html += meta("起卦时间", pan.time.solar + " " + pan.time.weekday);
+    html += meta("农历", pan.time.lunar + " " + pan.time.shichen);
+    html += meta("起卦方式", "数字起卦（含当前时间）");
+    html += meta("所用数字", esc(pan.rawInput || "（无）"));
+    if (pan.mode === "梅花易数") {
+      html += meta("本卦 · 当下局面", pan.ben_gua.name + ' <span class="small">第' + pan.ben_gua.seq + '卦</span>');
+      html += meta("互卦 · 中间过程", pan.hu_gua.name);
+      html += meta("变卦 · 最终结果", pan.bian_gua.name);
+      html += meta("动爻 · 转折位置", pan.dong_yao_label + " · " + pan.dong_yao_ti);
+      html += meta("体用 · 你与外部", "你(" + pan.ti.name + ") / 外部(" + pan.yong.name + ")");
+    } else {
+      html += meta("初落 · 起因", pan.steps[0].land);
+      html += meta("次落 · 过程", pan.steps[1].land);
+      html += meta("时位落 · 你的数", pan.steps[2].land);
+      html += meta("终落 · 微调后", pan.result.name + ' <span class="small">' + pan.result.luck + '</span>');
+    }
+    html += '</div>';
+    if (pan.mode === "梅花易数") {
+      html += '<div class="gua-vis"><div class="gua-col"><div class="gc-title">当下局面 · ' + pan.ben_gua.name + '</div>' + yaoHTML(pan) + '</div>';
+      html += '<div class="gua-col"><div class="gc-title">最终结果 · ' + pan.bian_gua.name + '</div>' + bianYaoHTML(pan) + '</div></div>';
+      html += '<div class="legend"><span>中间过程（互卦）：<b>' + pan.hu_gua.name + '</b></span><span>你（体）：' + pan.ti.name + '（' + pan.ti.wuxing + '）</span><span>外部（用）：' + pan.yong.name + '（' + pan.yong.wuxing + '）</span></div>';
+    } else {
+      html += xlrHTML(pan);
+    }
+    html += '<div class="basis"><b>起卦依据：</b>' + esc(pan.basis) + '</div></div>';
+    el.innerHTML = html;
+  }
+  function meta(k, v) { return '<div><span class="k">' + k + '</span><span class="v">' + v + '</span></div>'; }
+  function yaoHTML(pan) {
+    var s = "";
+    for (var i = pan.liuyao.length - 1; i >= 0; i--) {
+      var y = pan.liuyao[i]; var dong = y.is_dong ? " dong" : "";
+      s += '<div class="yao' + dong + '"><div class="lines">' + (y.yang ? '<div class="yline yang"></div>' : '<div class="yline vin"></div>') + '</div><div class="ytag">' + y.yao_ti + (y.is_dong ? ' ★' : '') + '</div></div>';
+    }
+    return s;
+  }
+  function bianYaoHTML(pan) {
+    var s = "";
+    for (var i = pan.liuyao.length - 1; i >= 0; i--) {
+      var y = pan.liuyao[i]; var yang = y.after_change;
+      s += '<div class="yao"><div class="lines">' + (yang ? '<div class="yline yang"></div>' : '<div class="yline vin"></div>') + '</div><div class="ytag">' + y.yao_ti + '</div></div>';
+    }
+    return s;
+  }
+  function xlrHTML(pan) {
+    var s = '<div class="xlr">';
+    s += xnode("起", "大安", false);
+    pan.steps.forEach(function (st, idx) {
+      s += '<span class="xarrow">→</span>';
+      var fin = (idx === pan.steps.length - 1);
+      s += xnode(st.unit + " " + st.count, st.land, fin);
+    });
+    s += '</div>';
+    return s;
+  }
+  function xnode(sub, name, fin) { return '<div class="xnode' + (fin ? ' final' : '') + '">' + name + '<small>' + sub + '</small></div>'; }
+
+  /* ============ 解读报告 ============ */
+  function produceReport(pan, onReady) {
+    var useLLM = $("#useLLM").checked && cfg.apiKey && cfg.apiKey.trim();
+    if (useLLM) {
+      llmReport(pan).then(function (rep) { onReady(pan, rep, "llm"); })
+        .catch(function (err) { onReady(pan, builtinReport(pan), "builtin"); });
+    } else {
+      onReady(pan, builtinReport(pan), "builtin");
+    }
+  }
+  function renderReportCard(pan, rep, src) {
+    lastView = { question: pan.question, mode: pan.mode, numbers: null, time: pan.time, pan: pan, report: rep, createdAt: null, id: null, source: src };
+    var box = document.createElement("div");
+    box.className = "card";
+    var label = src === "llm" ? "大模型解读" : (src === "history" ? "历史解读" : "内置解读");
+    box.innerHTML = '<div class="panel-h"><span class="dot"></span>解读报告 · ' + pan.mode +
+      ' <span class="badge' + (src === "llm" ? ' llm' : '') + '">' + label + '</span>' + crossEntry() + "</div>" + renderReport(rep, src === "llm");
+    var sr = document.createElement("div"); sr.className = "share-row";
+    sr.innerHTML = '<button class="share-btn" id="shareNow">生成分享卡片</button>';
+    box.appendChild(sr);
+    curPane().appendChild(box);
+    sr.querySelector("#shareNow").addEventListener("click", function () { shareCard(lastView); });
+  }
+  function renderReport(rep, isLLM) {
+    var cls = /凶/.test(rep.pattern) ? "pill bad" : (/吉/.test(rep.pattern) ? "pill good" : "pill");
+    var h = '<div class="report-title"><h3 class="report-head">' + esc(rep.headline) + '</h3>';
+    h += '<span class="' + cls + '">' + esc(rep.pattern) + '</span></div>';
+    (rep.sections || []).forEach(function (s) {
+      h += '<div class="sec"><h4>' + esc(s.title) + '</h4><p>' + esc(s.body) + '</p></div>';
+    });
+    return h;
+  }
+
+  /* 内置解读 */
+  var TRIGRAM_PLAIN = {
+    "乾": "像一位说一不二的领导或权威，主见强、推得动。",
+    "兑": "像一次顺畅的沟通、一个好消息，或一位善于表达的人。",
+    "离": "像一盏灯、一份文件、一次亮相，主被人看见、被记住。",
+    "震": "像一声春雷、一个突发动作，主开始和变动。",
+    "巽": "像一阵风，无孔不入、慢慢渗透，主传播和反复。",
+    "坎": "像一条河、一段下坡路，主风险和暗中使的劲。",
+    "艮": "像一座山挡在前面，主停顿、阻碍、先稳住。",
+    "坤": "像大地，包容承载，主众人、基础和顺从。"
+  };
+  var XLR_PLAIN = {
+    "大安": "事情稳稳的，像刚起跑、还没出状况。适合按部就班，别急着改主意。",
+    "留连": "像卡住的齿轮，转得动但慢，拖得越久越烦。宜缓，催太急反而坏事，也防拌嘴。",
+    "速喜": "好消息来得快，像快递第二天就到。事情会比你想的推进得快，抓住眼前机会。",
+    "赤口": "像容易拌嘴的场合，口舌、纠纷、合同坑。宜守不宜争，白纸黑字写清楚。",
+    "小吉": "最顺的一宫，像有人帮你牵线、好商量。合作、谈判、托人办事都合适。",
+    "空亡": "像竹篮打水，忙半天可能一场空，或对方在打太极。别硬撑，该撤就撤。"
+  };
+  // 去除句尾句号，便于在句中拼接（平白描述自带句号，拼装时不应重复）
+  function sd(s) { return (s == null ? "" : String(s)).replace(/\s*[。.]\s*$/, ""); }
+  function guaOneLine(g) {
+    var up = BAGUA[g.upper_num].name, low = BAGUA[g.lower_num].name;
+    return "你处在「" + g.name + "」的局面：内部" + sd(TRIGRAM_PLAIN[low]) + "；外部" + sd(TRIGRAM_PLAIN[up]) + "。";
+  }
+  function plainRelation(rel) {
+    return {
+      "用生体": "外部力量在帮你，等于有人扶你一把、有资源主动靠近，你顺手接住就行。",
+      "体克用": "局面其实你说了算，但得你自己动手推，坐着等不来。",
+      "体用比和": "内外像一条心，事情顺，也常跟你熟悉的那摊事有关。",
+      "体生用": "你一直在往外贴精力、贴资源，要注意别越贴越亏。",
+      "用克体": "外部力量在压你，硬来容易吃亏，先守一守、缓一缓更稳。"
+    }[rel] || "";
+  }
+  function plainLevel(level) {
+    return level === "吉" ? "整体偏向顺利" : level === "小凶" ? "需要留神、别硬来" : level === "凶" ? "眼下不太顺，宜先守" : "偏稳";
+  }
+  var HL = { "用生体": "整体顺利，外部在帮你", "体克用": "整体顺利，但得你主动", "体用比和": "顺风顺水，内外合拍", "体生用": "需留神，你在吃亏", "用克体": "眼下不顺，宜先守" };
+  function plainSuggestion(rel) {
+    if (rel === "用生体") return "· 对方在找理由认可你，多听少抢、给足空间就好。\n· 这类事宜顺势，不用太用力，顺水推舟。";
+    if (rel === "体克用") return "· 你控得住，但得自己主动推进，别等别人。\n· 该出手的节点别犹豫，拖延反而丢机会。";
+    if (rel === "体用比和") return "· 顺其自然，按你熟悉的节奏走。\n· 多借同领域的人脉和资源。";
+    if (rel === "体生用") return "· 先算清投入产出，别在一直消耗的事上越陷越深。\n· 该设边界就设边界。";
+    return "· 现阶段宜守不宜攻，先稳住再说。\n· 遇到阻力别硬顶，换个时间或方式再谈。";
+  }
+  function xlrLuckPlain(luck) { return luck === "大吉" ? "非常顺" : luck === "吉" ? "比较顺" : luck === "凶" ? "不太顺" : "很不顺"; }
+  function xlrPlainSuggestion(r) {
+    if (r.luck.indexOf("吉") >= 0) return "· 结果偏吉，抓住眼前机会、主动沟通最有利。\n· 合作、谈判、托人牵线类的事可以积极推进。";
+    if (r.name === "留连") return "· 事情有拖延，宜缓不宜急，催得越紧越不利。\n· 留意口舌纠纷，合同文书逐条看清楚。";
+    if (r.name === "赤口") return "· 防拌嘴、纠纷和合同坑，宜守不宜争。\n· 重要约定落到纸面，别只凭口头。";
+    return "· 这一宫主落空，可能忙半天没结果，或对方在打太极。\n· 别硬撑，及时止损、另想办法更妥。";
+  }
+  function builtinReport(pan) {
+    var disclaim = needDisclaim(pan.question);
+    if (pan.mode === "梅花易数") {
+      var rel = pan.ti_yong, b = pan.ben_gua, h = pan.hu_gua, c = pan.bian_gua;
+      var stage = ["", "转折在最开头，别一上来就 all in，先试探着来。",
+        "转折在内部推进时，先把你自己这边理顺。",
+        "转折在内外碰面、交锋的时候，该亮牌就亮牌。",
+        "转折在事情落到实处的阶段，动作要稳。",
+        "转折在你说了算的时候，把握住这个窗口。",
+        "转折在收尾阶段，别在最后一刻松劲或冒进。"][pan.dong_yao];
+      var secs = [
+        { title: "一眼结论", body: plainLevel(rel.level) + "。" + plainRelation(rel.relation) },
+        { title: "现在的情况", body: guaOneLine(b) },
+        { title: "中间会怎样", body: guaOneLine(h) + "这是过程中可能冒出来的变化或隐情。" },
+        { title: "最后的结果", body: guaOneLine(c) + (rel.level === "吉" ? "整体是往好的方向走。" : "整体需要你多留神、别强求。") },
+        { title: "关键提示", body: "事情的关键转折在第" + pan.dong_yao + "爻（" + pan.dong_yao_ti + "）：" + stage + "结合你问的「" + pan.question + "」，" + plainRelation(rel.relation) },
+        { title: "给你的建议", body: plainSuggestion(rel.relation) }
+      ];
+      if (disclaim) secs.push({ title: "免责说明", body: "这是传统占术的玩法，只当开拓思路，别当成做决定的唯一依据。涉及健康、法律、重大资金请另行咨询专业人士。" });
+      return { headline: HL[rel.relation] || plainLevel(rel.level), pattern: rel.level, sections: secs };
+    } else {
+      var r = pan.result;
+      var stepBodies = pan.steps.map(function (st, idx) {
+        var role = idx === 0 ? "第一步（起因）" : idx === 1 ? "第二步（过程）" : idx === 2 ? "第三步（你给的数）" : "最后系统结合你起卦时的当前时辰微调";
+        return role + "落在「" + st.land + "」：" + sd(XLR_PLAIN[st.land]);
+      });
+      var secs2 = [
+        { title: "一眼结论", body: sd(XLR_PLAIN[r.name]) + "（吉凶参考：" + xlrLuckPlain(r.luck) + "）" },
+        { title: "怎么走过来的", body: stepBodies.join("；") + "。" },
+        { title: "结合你问的事", body: sd(XLR_PLAIN[r.name]) + "放到你问的「" + pan.question + "」上：事情大概率" + xlrLuckPlain(r.luck) + "，" + r.yao },
+        { title: "给你的建议", body: xlrPlainSuggestion(r) }
+      ];
+      if (disclaim) secs2.push({ title: "免责说明", body: "这是传统占术的玩法，只当开拓思路，别当成做决定的唯一依据。涉及健康、法律、重大资金请另行咨询专业人士。" });
+      return { headline: r.name + "（" + xlrLuckPlain(r.luck) + "）", pattern: r.luck, sections: secs2 };
+    }
+  }
+  function needDisclaim(q) { return /健康|病|医|法律|官司|诉讼|投资|资金|贷款|理财|赌|离婚|决策/.test(q || ""); }
+
+  /* ============ 大模型调用 ============ */
+  function llmReport(pan) {
+    var c = { base: baseURL(), model: $("#model").value.trim() || cfg.model, key: cfg.apiKey };
+    var sys = systemPrompt(pan.mode);
+    var user = "问题：" + pan.question + "\n模式：" + pan.mode + "\n排盘（已由系统算出，请勿改动）：\n" + JSON.stringify(stripPan(pan), null, 2);
+    return llmChat(c, user, sys).then(function (text) {
+      var rep = parseReport(text);
+      if (!rep) throw new Error("返回内容无法解析为报告");
+      return rep;
+    });
+  }
+  function stripPan(pan) {
+    var o = { mode: pan.mode, method: pan.method, basis: pan.basis };
+    if (pan.mode === "梅花易数") {
+      o.ben_gua = pan.ben_gua.name; o.hu_gua = pan.hu_gua.name; o.bian_gua = pan.bian_gua.name;
+      o.dong_yao = pan.dong_yao_label + " (" + pan.dong_yao_ti + ")";
+      o.ti_yong = { relation: pan.ti_yong.relation, level: pan.ti_yong.level, ti: pan.ti.name + "(" + pan.ti.wuxing + ")", yong: pan.yong.name + "(" + pan.yong.wuxing + ")" };
+      o.liuyao = pan.liuyao.map(function (y) { return y.yao_ti + (y.is_dong ? "(动)" : ""); });
+      o.bagua_xiang = BAGUA;
+    } else {
+      o.steps = pan.steps; o.result = pan.result.name + "(" + pan.result.luck + ")";
+      o.result_jue = pan.result.jue; o.result_yao = pan.result.yao;
+      o.xiaoliuren = XIAOLIUREN;
+    }
+    return o;
+  }
+  function systemPrompt(mode) {
+    var common = "你面对的是完全不懂易经占卜的普通人，请用大白话、打比方来讲，绝不使用专业术语，除非紧跟一句大白话解释。\n" +
+      "排盘已由系统算好（下方 JSON），你只负责用大白话解读，不得自行改卦或重新取数。\n" +
+      "必须结合用户问的那件具体事来写，不要背通稿；就算结果偏凶，也要给可操作建议，绝不吓唬人、不做宿命论断。\n" +
+      "严格只输出如下 JSON（不要任何前后多余文字、不要 Markdown 代码块）：\n" +
+      '{"headline":"一句话结论，普通人能秒懂","pattern":"代表吉凶的词，如『吉』或『凶』","sections":[{"title":"...","body":"..."}]}';
+    var meihua =
+      "你是只懂「梅花易数」这一种解读者，不要提及其它占卜法。\n" +
+      "用通俗语言把三张卦讲清楚：本卦=当下局面，互卦=中间会经历的过程，变卦=最后的结果。\n" +
+      "动爻（也就是卦里哪一根线在变）提示转折发生在哪个阶段：第1爻刚开头、第2爻内部推进、第3爻内外交锋、第4爻开始落实、第5爻你说了算、第6爻收尾。\n" +
+      "『你』和『外部』谁占上风是主结论：外部帮你=顺利；你控得住但要主动=顺利；内外合拍=顺利；你一直在贴资源=要留神；外部压你=先守。\n" +
+      "sections 用这六个标题：[\"一眼结论\",\"现在的情况\",\"中间会怎样\",\"最后的结果\",\"关键提示\",\"给你的建议\"]，每个 body 都用大白话，必要时用比喻。\n" +
+      "输出 JSON 的 pattern 字段只填：吉 / 小凶 / 凶（选其一）。\n" + common;
+    var xiaoliuren =
+      "你是只懂「小六壬」这一种解读者，不要提及其它占卜法。\n" +
+      "排盘的 steps 是四步落点（起因 / 过程 / 你给的数 / 时辰微调），result 是最终落宫；六宫含义：大安=稳、留连=拖延、速喜=好消息快、赤口=口舌纠纷、小吉=最顺、空亡=落空。\n" +
+      "用大白话把四步串成一段经历，再落到用户的具体问题上。\n" +
+      "sections 用这四个标题：[\"一眼结论\",\"怎么走过来的\",\"结合你问的事\",\"给你的建议\"]，每个 body 都用大白话、打比方。\n" +
+      "输出 JSON 的 pattern 字段只填：大吉 / 吉 / 凶 / 大凶（选其一）。\n" + common;
+    var base = (mode === "小六壬") ? xiaoliuren : meihua;
+    base += "\n若用户问题涉及健康、法律、重大资金，请在 sections 末位追加一条 {title:\"免责说明\", body:\"这是传统占术的玩法，只当开拓思路，别当成做决定的唯一依据。\"}。";
+    return base;
+  }
+  function llmChat(c, userMsg, sysMsg) {
+    var url = c.base.replace(/\/$/, "") + "/chat/completions";
+    var body = { model: c.model, messages: [{ role: "system", content: sysMsg }, { role: "user", content: userMsg }], temperature: 0.8 };
+    return fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + c.key },
+      body: JSON.stringify(body)
+    }).then(function (res) {
+      if (!res.ok) return res.text().then(function (t) { throw new Error("HTTP " + res.status + " " + t.slice(0, 120)); });
+      return res.json();
+    }).then(function (j) {
+      var content = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+      if (!content) throw new Error("接口未返回内容");
+      return content;
+    });
+  }
+  function parseReport(text) {
+    if (!text) return null;
+    var s = text.trim();
+    try { return JSON.parse(s); } catch (e) { }
+    var a = s.indexOf("{"); var b = s.lastIndexOf("}");
+    if (a >= 0 && b > a) { try { return JSON.parse(s.slice(a, b + 1)); } catch (e) { } }
+    return null;
+  }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>]/g, function (m) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[m]; }); }
+
+  /* ============ 账户 / 认证（含登录态持久化） ============ */
+  var AUTH_KEY = "yijing_auth_v1";   // 本机保存的长期登录令牌 {token, username}
+  function loadAuth() { try { return JSON.parse(localStorage.getItem(AUTH_KEY)) || null; } catch (e) { return null; } }
+  function saveAuth(token, username) { try { localStorage.setItem(AUTH_KEY, JSON.stringify({ token: token, username: username })); } catch (e) { } }
+  function clearAuth() { try { localStorage.removeItem(AUTH_KEY); } catch (e) { } }
+
+
+  /* ===== 离线版：localStorage 存储层，替代后端 API ===== */
+  var OFFLINE_KEY = "yijing_offline_v1";
+  function loadStore() {
+    try {
+      var s = JSON.parse(localStorage.getItem(OFFLINE_KEY));
+      if (!s || typeof s !== "object") s = {};
+      if (!s.profiles || typeof s.profiles !== "object") s.profiles = {};
+      if (typeof s.session !== "string") s.session = null;
+      Object.keys(s.profiles).forEach(function (k) {
+        if (!Array.isArray(s.profiles[k].records)) s.profiles[k].records = [];
+        if (!s.profiles[k].deleted || typeof s.profiles[k].deleted !== "object") s.profiles[k].deleted = {};
+      });
+      return s;
+    } catch (e) { return { profiles: {}, session: null }; }
+  }
+  function persistStoreRaw(s) { try { localStorage.setItem(OFFLINE_KEY, JSON.stringify(s)); } catch (e) { } }
+  function persistStore(s) { persistStoreRaw(s); scheduleSync(); }
+  function newId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+  function hashLocal(pw, name) {
+    var h = 0, s = String(pw) + "|" + name;
+    for (var i = 0; i < s.length; i++) { h = ((h << 5) - h + s.charCodeAt(i)) | 0; }
+    return (h >>> 0).toString(16) + s.length.toString(16);
+  }
+  function offlineRoute(p, method, body) {
+    var s = loadStore();
+    var user = s.session;
+    function res(code, obj) { return { ok: code < 400, status: code, body: obj || {} }; }
+    if (p === "/api/register" && method === "POST") {
+      var name = String(body.username || "").trim();
+      if (name.length < 2 || name.length > 20) return res(400, { error: "昵称需为 2–20 个字符" });
+      if (String(body.password || "").length < 4) return res(400, { error: "口令至少 4 位" });
+      if (s.profiles[name]) return res(409, { error: "该昵称已被使用" });
+      s.profiles[name] = { pass: hashLocal(body.password, name), records: [] };
+      s.session = name; persistStore(s);
+      return res(200, { username: name, token: "local:" + name });
+    }
+    if (p === "/api/login" && method === "POST") {
+      var n2 = String(body.username || "").trim();
+      var pf = s.profiles[n2];
+      if (!pf || pf.pass !== hashLocal(body.password, n2)) return res(401, { error: "昵称或口令不正确" });
+      s.session = n2; persistStore(s);
+      return res(200, { username: n2, token: "local:" + n2 });
+    }
+    if (p === "/api/restore" && method === "POST") {
+      var tk = String(body.token || "");
+      var nm = tk.indexOf("local:") === 0 ? tk.slice(6) : "";
+      if (!nm || !s.profiles[nm]) return res(401, { error: "登录状态已失效，请重新登录" });
+      s.session = nm; persistStore(s);
+      return res(200, { username: nm, token: tk });
+    }
+    if (p === "/api/logout" && method === "POST") { s.session = null; persistStore(s); return res(200, { ok: true }); }
+    if (p === "/api/me" && method === "GET") {
+      if (!user || !s.profiles[user]) return res(401, { error: "未登录" });
+      return res(200, { username: user });
+    }
+    if (!user || !s.profiles[user]) return res(401, { error: "未登录" });
+    var recs = s.profiles[user].records;
+    if (p === "/api/records" && method === "GET") {
+      var list = recs.slice().sort(function (a, b) { return b.createdAt - a.createdAt; }).map(function (r) {
+        return { id: r.id, question: r.question, mode: r.mode, createdAt: r.createdAt, numbers: r.numbers, status: r.status || "done" };
+      });
+      return res(200, { records: list });
+    }
+    if (p === "/api/records" && method === "POST") {
+      var isDraft = body.status === "draft";
+      if (!isDraft && (typeof body.pan !== "object" || !body.pan || !body.report)) return res(400, { error: "记录内容不完整" });
+      var rec = {
+        id: newId(), createdAt: Date.now(), updatedAt: Date.now(), status: isDraft ? "draft" : "done",
+        question: String(body.question || "").slice(0, 200),
+        mode: body.mode === "小六壬" ? "小六壬" : "梅花易数",
+        numbers: Array.isArray(body.numbers) ? body.numbers.slice(0, 6) : [],
+        time: body.time || null, pan: isDraft ? null : body.pan, report: isDraft ? null : body.report
+      };
+      recs.push(rec); persistStore(s);
+      return res(200, { id: rec.id, createdAt: rec.createdAt });
+    }
+    var mm = p.match(/^\/api\/records\/(.+)$/);
+    if (mm) {
+      var id = mm[1], idx = -1;
+      for (var i = 0; i < recs.length; i++) { if (recs[i].id === id) { idx = i; break; } }
+      if (idx < 0) return res(404, { error: "记录不存在" });
+      if (method === "GET") return res(200, { record: recs[idx] });
+      if (method === "DELETE") {
+        // 删除墓碑：防止其他设备把已删除的记录同步回来
+        var own = s.profiles[user];
+        if (!own.deleted) own.deleted = {};
+        own.deleted[recs[idx].id] = Date.now();
+        recs.splice(idx, 1); persistStore(s); return res(200, { ok: true });
+      }
+      if (method === "PUT") {
+        var r2 = recs[idx], d = body.status === "draft";
+        r2.status = d ? "draft" : "done";
+        r2.updatedAt = Date.now();
+        if (typeof body.question === "string") r2.question = body.question.slice(0, 200);
+        if (body.mode) r2.mode = body.mode === "小六壬" ? "小六壬" : "梅花易数";
+        if (Array.isArray(body.numbers)) r2.numbers = body.numbers.slice(0, 6);
+        if (body.time) r2.time = body.time;
+        if (d) { r2.pan = null; r2.report = null; }
+        else { if (body.pan) r2.pan = body.pan; if (body.report) r2.report = body.report; }
+        persistStore(s);
+        return res(200, { ok: true, id: r2.id, createdAt: r2.createdAt });
+      }
+    }
+    return res(404, { error: "接口不存在" });
+  }
+  /* ===== 云同步（kvdb.io）：localStorage 为主，云端为镜像 ===== */
+  var CLOUD_BUCKET = "";
+  var SYNC_FLAG = "yijing_autoSync";
+  function cloudKey(name) { return "https://kvdb.io/" + CLOUD_BUCKET + "/yijing-" + encodeURIComponent(name); }
+  function syncEnabled() { return !!CLOUD_BUCKET && localStorage.getItem(SYNC_FLAG) !== "off"; }
+  function setSyncStatus(txt, warn) {
+    try {
+      var el = document.getElementById("syncStatus");
+      if (el) { el.textContent = txt; el.style.color = warn ? "var(--cinnabar)" : "var(--slate)"; }
+    } catch (e) { }
+  }
+  var _syncTimer = null;
+  function scheduleSync() {
+    if (!syncEnabled()) return;
+    if (_syncTimer) clearTimeout(_syncTimer);
+    _syncTimer = setTimeout(function () { cloudSync(); }, 2500);
+  }
+  // 按记录 id 合并：新版本覆盖旧版本；墓碑优先于记录
+  function mergeRecs(localRecs, cloudRecs, localTomb, cloudTomb) {
+    var tombs = {};
+    function putT(src) {
+      for (var k in src) {
+        if (Object.prototype.hasOwnProperty.call(src, k)) {
+          var v = src[k] || 0;
+          if (!tombs[k] || v > tombs[k]) tombs[k] = v;
+        }
+      }
+    }
+    putT(localTomb); putT(cloudTomb);
+    var cutoff = Date.now() - 180 * 24 * 3600 * 1000;
+    Object.keys(tombs).forEach(function (k) { if ((tombs[k] || 0) < cutoff) delete tombs[k]; });
+    function dead(id, ts) { var t = tombs[id]; return !!t && t >= (ts || 0); }
+    var map = {};
+    (cloudRecs || []).concat(localRecs || []).forEach(function (r) {
+      if (!r || !r.id) return;
+      var ts = r.updatedAt || r.createdAt || 0;
+      if (dead(r.id, ts)) return;
+      var prev = map[r.id];
+      if (!prev) { map[r.id] = r; return; }
+      if (ts > (prev.updatedAt || prev.createdAt || 0)) map[r.id] = r;
+    });
+    var out = [];
+    for (var id in map) { if (Object.prototype.hasOwnProperty.call(map, id)) out.push(map[id]); }
+    out.sort(function (a, b) { return (b.createdAt || 0) - (a.createdAt || 0); });
+    return { records: out, deleted: tombs };
+  }
+  // 云端读取：加时间戳参数 + no-store。kvdb 无 Cache-Control，浏览器/边缘节点会返回陈旧快照，
+  // 拿着旧快照回写会把其他设备的新记录覆盖掉，这是会真实丢数据的，必须绕过缓存。
+  function cloudGet(key) {
+    // 只加时间戳参数与 cache 选项，不加自定义头——自定义头会触发 CORS 预检，kvdb 未必放行
+    return fetch(key + "?_=" + Date.now(), { cache: "no-store" }).then(function (r) {
+      if (r.status === 404) return { records: [], deleted: {} };
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+  function cloudPut(key, payload) {
+    return fetch(key, {
+      method: "PUT", cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      if (!r || !r.ok) throw new Error("HTTP " + (r && r.status));
+      return true;
+    });
+  }
+  function cloudPayload(prof) {
+    return { app: "yijing", version: 1, records: prof.records || [], deleted: prof.deleted || {}, updatedAt: Date.now() };
+  }
+  // 先拉云端 → 本地合并 → 再推回云端；推完复查一次，兜住万一读到的仍是旧快照的情况
+  function cloudSync() {
+    var s0 = loadStore();
+    var name = s0.session;
+    if (!CLOUD_BUCKET || !name || !s0.profiles[name]) { setSyncStatus("未同步"); return Promise.resolve(false); }
+    if (!syncEnabled()) { setSyncStatus("自动同步已关"); return Promise.resolve(false); }
+    setSyncStatus("同步中…");
+    var key = cloudKey(name);
+    return cloudGet(key).then(function (cloud) {
+      var s2 = loadStore();
+      var prof = s2.profiles[name];
+      if (!prof) throw new Error("档案已失效");
+      var m = mergeRecs(prof.records || [], cloud && cloud.records, prof.deleted || {}, cloud && cloud.deleted);
+      prof.records = m.records; prof.deleted = m.deleted;
+      persistStoreRaw(s2);
+      return cloudPut(key, cloudPayload(prof));
+    }).then(function () {
+      return cloudGet(key).then(function (after) {
+        var s3 = loadStore();
+        var prof = s3.profiles[name];
+        if (!prof) return true;
+        var m2 = mergeRecs(prof.records || [], after && after.records, prof.deleted || {}, after && after.deleted);
+        var n0 = (prof.records || []).length;
+        if (m2.records.length !== n0) {          // 云端有我们缺的记录，说明上一读过期，再并一次
+          prof.records = m2.records; prof.deleted = m2.deleted;
+          persistStoreRaw(s3);
+          return cloudPut(key, cloudPayload(prof));
+        }
+        return true;
+      });
+    }).then(function () {
+      setSyncStatus("已同步 " + new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }));
+      try { if (typeof loadHistory === "function") loadHistory(); } catch (e) { }
+      return true;
+    }).catch(function (e) {
+      setSyncStatus("离线（未能同步）", true);
+      return false;
+    });
+  }
+  /* ===== 导出 / 导入备份 ===== */
+  function exportBackup() {
+    var s = loadStore();
+    var out = { app: "yijing-divination", version: 1, exportedAt: new Date().toISOString(), profiles: {} };
+    Object.keys(s.profiles).forEach(function (k) {
+      out.profiles[k] = { pass: s.profiles[k].pass || "", records: s.profiles[k].records || [], deleted: s.profiles[k].deleted || {} };
+    });
+    var blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "易经占卜备份_" + new Date().toISOString().slice(0, 10) + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    showToast("备份已导出，请妥善保存");
+  }
+  function importBackup(file) {
+    var fr = new FileReader();
+    fr.onload = function () {
+      var data;
+      try { data = JSON.parse(fr.result); } catch (e) { showToast("文件不是有效的备份"); return; }
+      if (!data || !data.profiles) { showToast("备份文件格式不正确"); return; }
+      var s = loadStore();
+      Object.keys(data.profiles).forEach(function (k) {
+        var inc = data.profiles[k];
+        if (!s.profiles[k]) { s.profiles[k] = { pass: inc.pass || "", records: inc.records || [], deleted: inc.deleted || {} }; return; }
+        var m = mergeRecs(s.profiles[k].records || [], inc.records || [], s.profiles[k].deleted || {}, inc.deleted || {});
+        s.profiles[k].records = m.records; s.profiles[k].deleted = m.deleted;
+      });
+      persistStore(s);
+      showToast("已导入备份");
+      try { if (typeof loadHistory === "function") loadHistory(); } catch (e) { }
+    };
+    fr.readAsText(file);
+  }
+  /* ===== 云同步 UI（离线版专有） ===== */
+  function initCloudUI() {
+    var bSync = document.getElementById("syncNowBtn");
+    var bToggle = document.getElementById("toggleSyncBtn");
+    var bExport = document.getElementById("exportBtn");
+    var bImport = document.getElementById("importBtn");
+    var fInput = document.getElementById("importFile");
+    function refresh() {
+      if (!bToggle) return;
+      var on = syncEnabled();
+      bToggle.textContent = "自动:" + (on ? "开" : "关");
+      bToggle.className = "mini-btn" + (on ? "" : " warn");
+    }
+    refresh();
+    if (bSync) bSync.addEventListener("click", function () { setSyncStatus("同步中…"); cloudSync(); });
+    if (bToggle) bToggle.addEventListener("click", function () {
+      var wasOff = localStorage.getItem(SYNC_FLAG) === "off";
+      localStorage.setItem(SYNC_FLAG, wasOff ? "on" : "off");
+      refresh();
+      showToast(wasOff ? "自动同步已开启" : "自动同步已关闭");
+      if (wasOff) cloudSync();
+    });
+    if (bExport) bExport.addEventListener("click", exportBackup);
+    if (bImport && fInput) {
+      bImport.addEventListener("click", function () { fInput.click(); });
+      fInput.addEventListener("change", function (e) {
+        if (e.target.files && e.target.files[0]) importBackup(e.target.files[0]);
+        fInput.value = "";
+      });
+    }
+    setSyncStatus(syncEnabled() ? "待同步" : "自动同步已关");
+    setTimeout(function () { if (syncEnabled()) cloudSync(); }, 1500);
+  }
+  // 换设备场景：本机没有该档案时，若云端有同名数据则在本机建档（随后由同步拉取记录）
+  function preAuthMaybe(path, body) {
+    if (path !== "/api/login") return Promise.resolve();
+    if (!CLOUD_BUCKET || !syncEnabled()) return Promise.resolve();
+    var name = String(body.username || "").trim();
+    if (!name) return Promise.resolve();
+    var s = loadStore();
+    if (s.profiles[name]) return Promise.resolve();   // 本机已有，交给正常口令校验
+    return cloudGet(cloudKey(name)).then(function (d) {
+      if (!d || !d.records) return;
+      var s2 = loadStore();
+      if (s2.profiles[name]) return;
+      s2.profiles[name] = { pass: hashLocal(body.password || "", name), records: [], deleted: {} };
+      persistStoreRaw(s2);
+    }).catch(function () { });
+  }
+  function api(path, opts) {
+    opts = opts || {};
+    var body = {};
+    try { body = opts.body ? JSON.parse(opts.body) : {}; } catch (e) { body = {}; }
+    return Promise.resolve()
+      .then(function () { return preAuthMaybe(path, body); })
+      .then(function () { return offlineRoute(path, opts.method || "GET", body); })
+      .catch(function (e) {
+        return { ok: false, status: 500, body: { error: "本地存储出错：" + e.message } };
+      });
+  }
+
+  // 连不上本地服务时的统一提示（区分"直接打开文件"与"服务没起"）
+  function netErrMsg() { return "本地存储不可用或已损坏，请清理浏览器数据后重试"; }
+  function setLoggedIn(username) {
+    currentUsername = username || null;
+    $("#sideUser").textContent = username || "—";
+    if ($("#hdrUser")) $("#hdrUser").textContent = username || "—";
+  }
+  // 登录/注册成功：保存令牌、重置全部模块状态（切换账号时不留上一个账号的数据）
+  function onAuthSuccess(r) {
+    hideAuth();
+    setLoggedIn(r.body.username);
+    if (r.body.token) saveAuth(r.body.token, r.body.username);
+    resetAllState();
+    loadHistory();
+    showToast("欢迎，" + r.body.username);
+  }
+  // 清空所有模块状态、结果区、草稿与历史列表
+  function resetAllState() {
+    modules.meihua = newModuleState();
+    modules.xiaoliuren = newModuleState();
+    state.mode = "meihua";
+    currentView = null; lastView = null;
+    closeShareModal();
+    $("#question").value = ""; $("#numbers").value = "";
+    $("#resultMeihua").innerHTML = ""; $("#resultXlr").innerHTML = "";
+    syncTabs(); updateHint(); applyInputs(); syncPanes(); syncSwitchBtn();
+    // 登出场景下保持"请先登录"提示；登录成功后会立刻被 loadHistory() 覆盖
+    $("#histList").innerHTML = '<div class="hist-empty">请先登录查看历史记录。</div>';
+  }
+  function showAuth(mode) {
+    authMode = mode;
+    if (mode === "login") {
+      $("#authTitle").textContent = "登录"; $("#authSub").textContent = "你的算卦记录保存在本机浏览器，不依赖服务器"; $("#authSubmit").textContent = "登录";
+      $("#authSwitch").innerHTML = '还没有账号？<a id="toReg">注册新账号</a>';
+    } else {
+      $("#authTitle").textContent = "注册"; $("#authSub").textContent = "在本机新建一个档案，记录保存在本机浏览器"; $("#authSubmit").textContent = "注册并登录";
+      $("#authSwitch").innerHTML = '已有账号？<a id="toLogin">去登录</a>';
+    }
+    $("#authErr").textContent = ""; $("#authUser").value = ""; $("#authPass").value = "";
+    $("#authMask").classList.add("show");
+    $("#toReg") && $("#toReg").addEventListener("click", function () { showAuth("register"); });
+    $("#toLogin") && $("#toLogin").addEventListener("click", function () { showAuth("login"); });
+  }
+  function hideAuth() { $("#authMask").classList.remove("show"); }
+  $("#authSubmit").addEventListener("click", function () {
+    var username = $("#authUser").value.trim();
+    var password = $("#authPass").value;
+    if (username.length < 2 || password.length < 4) { $("#authErr").textContent = "昵称 2–20 字、口令至少 4 位"; return; }
+    var path = authMode === "login" ? "/api/login" : "/api/register";
+    var remember = $("#authRemember") ? $("#authRemember").checked : true;
+    api(path, { method: "POST", body: JSON.stringify({ username: username, password: password, remember: remember }) }).then(function (r) {
+      if (!r.ok) { $("#authErr").textContent = (r.body && r.body.error) || "操作失败"; return; }
+      onAuthSuccess(r);
+    }).catch(function () { $("#authErr").textContent = netErrMsg(); });
+  });
+  $("#logoutLink").addEventListener("click", function (e) {
+    e.preventDefault();
+    var a = loadAuth();
+    api("/api/logout", { method: "POST", body: JSON.stringify(a ? { token: a.token } : {}) }).then(function () {
+      clearAuth(); setLoggedIn(null); resetAllState(); showAuth("login");
+    }).catch(function () { clearAuth(); setLoggedIn(null); resetAllState(); showAuth("login"); showToast(netErrMsg()); });
+  });
+  // 启动时：先试会话，失效则用本机令牌自动恢复，都不行才弹登录
+  function checkAuth() {
+    api("/api/me").then(function (r) {
+      if (r.ok) { setLoggedIn(r.body.username); loadHistory(); return; }
+      var a = loadAuth();
+      if (a && a.token) {
+        api("/api/restore", { method: "POST", body: JSON.stringify({ token: a.token }) }).then(function (r2) {
+          if (r2.ok) {
+            setLoggedIn(r2.body.username);
+            if (r2.body.token) saveAuth(r2.body.token, r2.body.username);
+            loadHistory();
+          } else {
+            clearAuth(); showAuth("login");
+            $("#histList").innerHTML = '<div class="hist-empty">请先登录查看历史记录。</div>';
+          }
+        }).catch(function () { showAuth("login"); showToast(netErrMsg()); });
+      } else {
+        showAuth("login");
+        $("#histList").innerHTML = '<div class="hist-empty">请先登录查看历史记录。</div>';
+      }
+    }).catch(function () { showAuth("login"); showToast(netErrMsg()); });
+  }
+
+  /* ============ 历史记录 ============ */
+  function fmtTime(ms) {
+    var d = new Date(ms);
+    function p(n) { return (n < 10 ? "0" : "") + n; }
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+  function loadHistory() {
+    api("/api/records").then(function (r) {
+      if (!r.ok) { showAuth("login"); return; }
+      var list = r.body.records || [];
+      var box = $("#histList");
+      if (!list.length) { box.innerHTML = '<div class="hist-empty">还没有记录。<br/>算一卦，结果会自动保存在这里。</div>'; return; }
+      var html = "";
+      list.forEach(function (it) {
+        var xl = it.mode === "小六壬";
+        var draft = it.status === "draft";
+        var q = draft ? "新占卜（待填写数字）" : esc(it.question);
+        html += '<div class="hist-item' + (draft ? " is-draft" : "") + '" data-id="' + it.id + '">' +
+          '<div class="hist-q"><span class="mode' + (xl ? ' xl' : '') + '">' + (xl ? '小六壬' : '梅花') + '</span><span class="txt">' + q + '</span></div>' +
+          '<div class="hist-meta"><span class="hist-time">' + fmtTime(it.createdAt) + (draft ? " · 草稿" : "") + '</span>' +
+          '<span class="hist-ops"><button data-act="view">查看</button><button data-act="share">分享</button><button class="del" data-act="del">删除</button></span></div></div>';
+      });
+      box.innerHTML = html;
+      box.querySelectorAll(".hist-item").forEach(function (el) {
+        var id = el.getAttribute("data-id");
+        el.addEventListener("click", function (e) {
+          var act = e.target.getAttribute("data-act");
+          if (act === "del") { e.stopPropagation(); deleteRecord(id); return; }
+          if (act === "share") { e.stopPropagation(); shareRecordById(id); return; }
+          viewRecord(id);
+        });
+      });
+    }).catch(function () { showAuth("login"); showToast(netErrMsg()); });
+  }
+  function markActive(id) {
+    document.querySelectorAll(".hist-item").forEach(function (el) {
+      el.classList.toggle("active", el.getAttribute("data-id") === id);
+    });
+  }
+  function viewRecord(id) {
+    api("/api/records/" + id).then(function (r) {
+      if (!r.ok) { showToast("记录不存在或无权访问"); return; }
+      var rec = r.body.record;
+      // 记录属于哪个模块就切到哪个模块，界面数据立即同步为该模块的当前状态
+      var mode = modeKey(rec.mode);
+      if (mode !== state.mode) setMode(mode);
+      var m = cur();
+      m.question = rec.question || ""; m.numbers = (rec.numbers || []).join(" ");
+      applyInputs();
+      if (rec.status === "draft" || !rec.pan || !rec.report) {
+        // 草稿：只恢复表单，不出排盘，起卦后回写这条记录
+        m.pan = null; m.report = null; m.hasResult = false;
+        m.draftId = rec.id; m.draftCreatedAt = rec.createdAt;
+        curPane().innerHTML = '<div class="card"><div class="panel-h"><span class="dot"></span>新占卜 · ' + labelOf(mode) + crossEntry() + '</div><div class="draft-tip">这是一条新建占卜，还没有起卦。填写三个数字后点击「起卦」，解读会自动保存到这条记录里。</div></div>';
+      } else {
+        m.pan = rec.pan; m.report = rec.report; m.hasResult = true;
+        m.draftId = null; m.draftCreatedAt = null;
+        currentView = { question: rec.question, mode: rec.mode, numbers: rec.numbers, time: rec.time, pan: rec.pan, report: rec.report, createdAt: rec.createdAt, id: rec.id };
+        renderPan(rec.pan);
+        renderReportCard(rec.pan, rec.report, "history");
+      }
+      markActive(id);
+      curPane().scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+  function saveRecord(rec) {
+    api("/api/records", { method: "POST", body: JSON.stringify(rec) }).then(function (r) {
+      if (r.ok) { rec.id = r.body.id; rec.createdAt = r.body.createdAt; currentView = rec; loadHistory(); markActive(r.body.id); }
+      else if (r.status === 401) { showAuth("login"); }
+      else { showToast("保存失败：" + ((r.body && r.body.error) || "未知错误")); }
+    }).catch(function () { showToast(netErrMsg()); });
+  }
+  function deleteRecord(id) {
+    if (!confirm("确定删除这条记录？")) return;
+    api("/api/records/" + id, { method: "DELETE" }).then(function (r) {
+      if (r.ok) {
+        showToast("已删除");
+        // 清理两个模块中指向该记录的草稿与当前视图，避免出现"幽灵数据"
+        ["meihua", "xiaoliuren"].forEach(function (k) {
+          var mm = modules[k];
+          if (mm.draftId === id) { mm.draftId = null; mm.draftCreatedAt = null; }
+        });
+        if (currentView && currentView.id === id) { curPane().innerHTML = ""; currentView = null; lastView = null; }
+        loadHistory();
+      }
+      else { showToast("删除失败"); }
+    });
+  }
+  function shareRecordById(id) {
+    api("/api/records/" + id).then(function (r) {
+      if (!r.ok) { showToast("记录不存在或无权访问"); return; }
+      var rec = r.body.record;
+      shareCard({ question: rec.question, mode: rec.mode, numbers: rec.numbers, time: rec.time, pan: rec.pan, report: rec.report, createdAt: rec.createdAt, id: rec.id });
+    });
+  }
+  $("#refreshBtn").addEventListener("click", loadHistory);
+  $("#clearAllBtn").addEventListener("click", function () {
+    if (!confirm("确定清空你名下的全部历史记录？此操作不可恢复。")) return;
+    api("/api/records").then(function (r) {
+      var list = (r.ok && r.body.records) || [];
+      if (!list.length) { showToast("没有可清空的记录"); return; }
+      var pending = list.length;
+      list.forEach(function (it) {
+        api("/api/records/" + it.id, { method: "DELETE" }).then(function () {
+          pending--; if (pending === 0) { showToast("已清空"); resetAllState(); loadHistory(); }
+        });
+      });
+    });
+  });
+
+  /* ============ 分享卡片（Canvas + 实时预览） ============ */
+  function shareCard(view) {
+    if (!view || !view.pan) { showToast("请先查看一条记录再分享"); return; }
+    var pan = view.pan, rep = view.report, mode = view.mode;
+    var W = 720, pad = 40, dpr = 2;
+    var FONT = '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","WenQuanYi Micro Hei",sans-serif';
+    function fontFor(type) {
+      if (type === "title") return '700 21px ' + FONT;
+      if (type === "q") return '600 16.5px ' + FONT;
+      if (type === "sec") return '700 16.5px ' + FONT;
+      if (type === "meta") return '400 14.5px ' + FONT;
+      if (type === "foot") return '400 13px ' + FONT;
+      return '400 16px ' + FONT;
+    }
+    var c = document.createElement("canvas");
+    var x = c.getContext("2d");
+    x.textBaseline = "middle";
+    var lines = [];
+    function wrapLines(text, type) {
+      x.font = fontFor(type);
+      var maxW = W - pad * 2;
+      var chars = String(text).split("");
+      var cur = "";
+      for (var i = 0; i < chars.length; i++) {
+        var test = cur + chars[i];
+        if (x.measureText(test).width > maxW && cur) { lines.push({ type: type, text: cur }); cur = chars[i]; }
+        else cur = test;
+      }
+      if (cur) lines.push({ type: type, text: cur });
+    }
+    wrapLines("易经占卜 · 解读卡片", "title");
+    wrapLines("占问：" + view.question, "q");
+    var when = view.createdAt ? fmtTime(view.createdAt) : (pan.time ? pan.time.solar + " " + pan.time.weekday : "");
+    wrapLines("类型：" + (mode === "小六壬" ? "小六壬" : "梅花易数") + "　时间：" + when, "meta");
+    if (mode === "梅花易数") {
+      wrapLines("本卦 " + pan.ben_gua.name + "（当下） · 互卦 " + pan.hu_gua.name + "（过程） · 变卦 " + pan.bian_gua.name + "（结果）", "meta");
+    } else {
+      wrapLines("落宫：" + pan.steps.map(function (s) { return s.land; }).join(" → "), "meta");
+    }
+    wrapLines(rep.headline + "　「" + rep.pattern + "」", "title");
+    (rep.sections || []).forEach(function (s) {
+      wrapLines(s.title, "sec");
+      wrapLines(s.body, "body");
+    });
+    wrapLines("—— 传统占术，仅供思路参考，不构成决策依据 ——", "foot");
+
+    var lh = 30, titleLH = 36, gap = 12, top = pad + 30;
+    var H = top;
+    lines.forEach(function (l) { H += (l.type === "title" ? titleLH : lh) + gap; });
+    H += pad;
+
+    c.width = W * dpr; c.height = H * dpr;
+    x.scale(dpr, dpr);
+    x.fillStyle = "#faf8f4"; x.fillRect(0, 0, W, H);
+    x.fillStyle = "#ffffff"; x.fillRect(14, 14, W - 28, H - 28);
+    x.strokeStyle = "#e3ddd2"; x.lineWidth = 1; x.strokeRect(14, 14, W - 28, H - 28);
+    x.fillStyle = "#b23b2e"; x.fillRect(14, 14, 6, H - 28);
+
+    var y = top;
+    lines.forEach(function (l) {
+      var slot = (l.type === "title") ? titleLH : lh;
+      x.font = fontFor(l.type);
+      if (l.type === "title") x.fillStyle = "#1c1a17";
+      else if (l.type === "q") x.fillStyle = "#1c1a17";
+      else if (l.type === "sec") x.fillStyle = "#b23b2e";
+      else if (l.type === "meta") x.fillStyle = "#5b6b6e";
+      else if (l.type === "foot") x.fillStyle = "#9a948a";
+      else x.fillStyle = "#4a463f";
+      x.fillText(l.text, pad, y + slot / 2);
+      y += slot + gap;
+    });
+
+    c.toBlob(function (blob) {
+      if (!blob) { showToast("生成失败，请重试"); return; }
+      if (currentShareURL) URL.revokeObjectURL(currentShareURL);
+      currentShareURL = URL.createObjectURL(blob);
+      $("#shareImg").src = currentShareURL;
+      var fname = "易经占卜卡片_" + (view.createdAt ? fmtTime(view.createdAt).replace(/[: ]/g, "-") : Date.now()) + ".png";
+      $("#shareDownload").setAttribute("data-name", fname);
+      openShareModal();
+    }, "image/png");
+  }
+  function openShareModal() { $("#shareMask").classList.add("show"); }
+  function closeShareModal() {
+    $("#shareMask").classList.remove("show");
+    if (currentShareURL) { URL.revokeObjectURL(currentShareURL); currentShareURL = null; }
+    $("#shareImg").src = "";
+  }
+
+  /* ============ 移动端抽屉 ============ */
+  function openDrawer() { $("#sidebar").classList.add("open"); $("#sideMask").classList.add("show"); }
+  function closeDrawer() { $("#sidebar").classList.remove("open"); $("#sideMask").classList.remove("show"); }
+  $("#hamburger").addEventListener("click", function () {
+    if (window.matchMedia("(max-width:920px)").matches) { openDrawer(); }
+    else { $("#app").classList.toggle("nav-collapsed"); }
+  });
+  $("#sideMask").addEventListener("click", closeDrawer);
+  if ($("#hdrUser")) $("#hdrUser").addEventListener("click", openDrawer);
+  if ($("#sideClose")) $("#sideClose").addEventListener("click", closeDrawer);
+
+  /* ============ 分享卡片预览 ============ */
+  $("#shareClose").addEventListener("click", closeShareModal);
+  $("#shareClose2").addEventListener("click", closeShareModal);
+  $("#shareMask").addEventListener("click", function (e) { if (e.target === $("#shareMask")) closeShareModal(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && $("#shareMask").classList.contains("show")) closeShareModal(); });
+  $("#shareDownload").addEventListener("click", function () {
+    if (!currentShareURL) return;
+    var a = document.createElement("a");
+    a.href = currentShareURL;
+    a.download = $("#shareDownload").getAttribute("data-name") || "易经占卜卡片.png";
+    document.body.appendChild(a); a.click(); a.remove();
+    showToast("已开始下载卡片");
+  });
+
+  /* ============ Toast ============ */
+  var toastTimer = null;
+  function showToast(msg) {
+    var t = $("#toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200);
+  }
+
+  /* ============ 启动 ============ */
+  syncTabs(); updateHint(); applyInputs(); syncPanes(); syncSwitchBtn();
+  // 直接双击打开网页文件时，后端接口必然不可用，提前给出明确指引
+  try { initCloudUI(); } catch (e) { }
+  checkAuth();
+})();
+
+</script>
+</body>
+</html>
